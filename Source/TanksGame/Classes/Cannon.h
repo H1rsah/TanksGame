@@ -41,8 +41,8 @@ public:
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Fire params")
 	ECannonType CannonType = ECannonType::FireProjectile;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Fire params")
-	TSubclassOf<AProjectile> ProjectileClass;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, meta = (EditCondition = "CannonType == ECannonType::FireProjectile", EditConditionHides), Category = "Fire params")
+	TSubclassOf<AProjectile> ProjectileActor;
 	
 private:
 	FTimerHandle ReloadTimerHandle;

@@ -2,6 +2,7 @@
 
 
 #include "Cannon.h"
+#include "DrawDebugHelpers.h"
 
 
 // Sets default values
@@ -86,14 +87,37 @@ void ACannon::Shot()
 {
 	
 	check(BurstShotsLeft > 0);
-	switch (CannonType)
+	if (CannonType == ECannonType::FireProjectile)
 	{
-	case ECannonType::FireProjectile:
 		GEngine->AddOnScreenDebugMessage(-1, 2, FColor::Green,"Fire Projectile");
-		break;
-	case ECannonType::FireTrace:
+
+		UActorPool* Pool = GetWorld()->GetSubsystem<UActorPool>();
+		const FTransform SpawnTransform(ProjectileSpawnPoint->GetComponentRotation(), ProjectileSpawnPoint->GetComponentLocation(), FVector::OneVector);
+		AProjectile* MyProjectile = Cast<AProjectile>(Pool->RetreiveActor(ProjectileActor, SpawnTransform));
+		if(MyProjectile)
+			MyProjectile->Start();
+	}
+	else
+	{
 		GEngine->AddOnScreenDebugMessage(-1, 2, FColor::Red,"Fire Trace");
-		break;
+
+        FHitResult Hit;
+        FVector TraceStart = ProjectileSpawnPoint->GetComponentLocation();
+        FVector TraceEnd = ProjectileSpawnPoint->GetComponentLocation() + ProjectileSpawnPoint->GetForwardVector() * FireRange;
+        FCollisionQueryParams TraceParams = FCollisionQueryParams (FName(TEXT("FireTrace")), true, this);
+        TraceParams.bReturnPhysicalMaterial = false;
+		if (GetWorld()->LineTraceSingleByChannel(Hit, TraceStart, TraceEnd, ECC_Visibility, TraceParams))
+		{
+			DrawDebugLine(GetWorld(), TraceStart, Hit.Location, FColor::Red, false, 0.5f, 0, 5.f);
+			if (Hit.Actor.IsValid() && Hit.Component.IsValid(), Hit.Component->GetCollisionObjectType() == ECC_Destructible)
+			{
+				Hit.Actor->Destroy();
+			}
+		}
+		else
+		{
+			DrawDebugLine(GetWorld(), TraceStart, TraceEnd, FColor::Red, false, 0.5f, 0, 5.f);
+		}
 	}
 
 	if (--BurstShotsLeft > 0)
@@ -105,5 +129,4 @@ void ACannon::Shot()
 	{
 		GetWorld()->GetTimerManager().SetTimer(ReloadTimerHandle, this, &ACannon::Reload, 1.f / FireRate, false);
 	}
-	GetWorld()->GetTimerManager().SetTimer(ReloadTimerHandle, this, &ACannon::Reload, 1 / FireRate, false);
 }

@@ -3,6 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "ActorPool.h"
+#include "Components/SphereComponent.h"
 #include "GameFramework/Actor.h"
 #include "Projectile.generated.h"
 
@@ -10,16 +12,29 @@ UCLASS()
 class TANKSGAME_API AProjectile : public AActor
 {
 	GENERATED_BODY()
+	
+protected:
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
+	UStaticMeshComponent* Mesh;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Movement|Speed")
+	float MoveSpeed = 100;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Movement|Speed")
+	float MoveRate = 0.005f;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Damage")
+	float Damage = 1;
 
-public:
-	// Sets default values for this actor's properties
+	FTimerHandle MovementTimerHandle;
+	
+public:	
 	AProjectile();
 
-protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
+	void Start();
 
-public:
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+protected:
+	UFUNCTION()
+	void OnMeshOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
+	UFUNCTION()
+	void Move();
 };
