@@ -15,26 +15,26 @@ class TANKSGAME_API AProjectile : public AActor
 	
 protected:
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
-	UStaticMeshComponent* Mesh;
-	
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Movement|Speed")
-	float MoveSpeed = 100;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Movement|Speed")
-	float MoveRate = 0.005f;
+	class UStaticMeshComponent* Mesh;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Movement")
+	float MoveSpeed = 500.f;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Movement")
+	float FireRange = 3000.f;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Damage")
-	float Damage = 1;
+	float Damage = 1.f;
 
-	FTimerHandle MovementTimerHandle;
-	
-public:	
+
+public:
 	AProjectile();
 
 	void Start();
+	void Stop();
+	virtual void Tick(float DeltaSeconds) override;
 
 protected:
 	UFUNCTION()
-	void OnMeshOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+	void OnHit(class UPrimitiveComponent* HitComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& SweepResult);
 
-	UFUNCTION()
-	void Move();
+private:
+	FVector StartPosition;
 };

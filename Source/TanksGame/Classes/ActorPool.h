@@ -18,8 +18,6 @@ public:
 	void ReturnActor(AActor* Actor);
 	bool IsActorInPool(AActor* Actor) const;
 
-	void DumpPoolStats();
-
 protected:
 	virtual bool DoesSupportWorldType(EWorldType::Type WorldType) const override;
 

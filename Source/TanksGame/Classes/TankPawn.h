@@ -29,10 +29,10 @@ protected:
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
 	UArrowComponent * CannonSetupPoint;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Turret")
+	TSubclassOf<ACannon> DefaultCannon;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Turret|Cannon")
 	TSubclassOf<ACannon> CannonType;
-	UPROPERTY()
-	ACannon* Cannon;
 
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -51,22 +51,26 @@ protected:
 	UPROPERTY()
 	ATankPlayerController* TankController;
 
-	float TargetForwardAxisValue, CurrentForwardAxisValue;
-	float TargetRotationAxisValue, CurrentRotationAxisValue;
 public:
 	// Sets default values for this pawn's properties
 	ATankPawn();
 
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable, Category = "Movement")
 	void MoveForward(float AxisValue);
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable, Category = "Movement")
 	void RotateRight(float AxisValue);
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable, Category = "Turret")
 	void RotateTurretTo(FVector TargetPosition) const;
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable, Category = "Turret")
 	void Fire();
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable, Category = "Turret")
 	void FireSpecial();
+	UFUNCTION(BlueprintCallable, Category = "Turret")
+	void SetupCannon(TSubclassOf<ACannon> NewCannon);
+	UFUNCTION(BlueprintCallable, Category = "Turret")
+	void SwitchCannon();
+	UFUNCTION(BlueprintPure, Category = "Turret")
+	ACannon* GetActiveCannon() const;
 
 	
 	// Called every frame
@@ -74,4 +78,13 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+private:
+	float TargetForwardAxisValue, CurrentForwardAxisValue;
+	float TargetRotationAxisValue, CurrentRotationAxisValue;
+
+	UPROPERTY()
+	ACannon* CurrentCannon = nullptr;
+	UPROPERTY()
+	ACannon* ReserveCannon = nullptr;
 };

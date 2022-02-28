@@ -72,18 +72,3 @@ void UActorPool::OnActorDestroyed(AActor* Actor)
 
     Actors.Remove(Actor);
 }
-
-void UActorPool::DumpPoolStats()
-{
-    UE_LOG(LogActorPool, Display, TEXT("NumActors in pool: %d"), Actors.Num());
-    UE_LOG(LogActorPool, Display, TEXT("InactiveActors in pool:"));
-    UE_LOG(LogActorPool, Display, TEXT("Actor\t\t\tClass"));
-    UE_LOG(LogActorPool, Display, TEXT("=====\t\t\t====="));
-    for (const auto& Record : InactiveActors)
-    {
-        for (AActor* Actor : Record.Value)
-        {
-            UE_LOG(LogActorPool, Display, TEXT("%s\t\t\t%s"), *Actor->GetName(), *Record.Key->GetName());
-        }
-    }
-}

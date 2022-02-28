@@ -7,30 +7,65 @@
 // Sets default values
 AProjectile::AProjectile()
 {
-	PrimaryActorTick.bCanEverTick = false;
-	USceneComponent * sceeneCpm = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
-	RootComponent = sceeneCpm;
-	
+	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bStartWithTickEnabled = false;
+	PrimaryActorTick.TickInterval = 0.05f;
+
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
 	Mesh->SetupAttachment(RootComponent);
-	Mesh->OnComponentBeginOverlap.AddDynamic(this, &AProjectile::OnMeshOverlapBegin);
-
+	Mesh->OnComponentHit.AddDynamic(this, &AProjectile::OnHit);
+	Mesh->SetHiddenInGame(true);
+	RootComponent = Mesh;
 }
+
 
 void AProjectile::Start()
 {
-	GetWorld()->GetTimerManager().SetTimer(MovementTimerHandle, this, &AProjectile::Move, MoveRate, true, MoveRate);
+	PrimaryActorTick.SetTickFunctionEnable(true);
+	StartPosition = GetActorLocation();
+	Mesh->SetHiddenInGame(false);
+	Mesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 }
 
-void AProjectile::OnMeshOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
-	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+void AProjectile::Stop()
 {
-	GEngine->AddOnScreenDebugMessage(-1, 2, FColor::Yellow, FString::Printf(TEXT("Projectile %s collided with %s. "), *GetName(), *OtherActor->GetName()));
-	UE_LOG(LogTemp, Warning, TEXT("Projectile %s collided with %s. "), *GetName(), *OtherActor->GetName());
+	PrimaryActorTick.SetTickFunctionEnable(false);
+	Mesh->SetHiddenInGame(true);
+	Mesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+	UActorPool* Pool = GetWorld()->GetSubsystem<UActorPool>();
+	if (Pool->IsActorInPool(this))
+	{
+		Pool->ReturnActor(this);
+	}
+	else
+	{
+		Destroy();
+	}
 }
 
-void AProjectile::Move()
+// Called every frame
+void AProjectile::Tick(float DeltaTime)
 {
-	FVector nextPosition = GetActorLocation() + GetActorForwardVector() * MoveSpeed * MoveRate;
-	SetActorLocation(nextPosition);
+	Super::Tick(DeltaTime);
+
+	FVector NextPosition = GetActorLocation() + GetActorForwardVector() * MoveSpeed * DeltaTime;
+	SetActorLocation(NextPosition, true);
+
+	if (FVector::Dist(GetActorLocation(), StartPosition) > FireRange)
+	{
+		Stop();
+	}
 }
+
+void AProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& SweepResult)
+{
+	if (OtherActor && OtherComp && OtherComp->GetCollisionObjectType() == ECC_Destructible)
+	{
+		OtherActor->Destroy();
+	}
+	Stop();
+}
+
+

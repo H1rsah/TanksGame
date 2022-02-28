@@ -22,10 +22,11 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	FVector GetMousePos() const { return MousePosition; };
 
-protected:
+private:
 	virtual void BeginPlay() override;
 	void MoveForward(float AxisValue);
 	void RotateRight(float AxisValue);
 	void Fire();
 	void FireSpecial();
+	void SwitchCannon();
 };

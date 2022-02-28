@@ -52,11 +52,7 @@ void ATankPawn::BeginPlay()
 
 	TankController = Cast<ATankPlayerController>(GetController());
 
-	if(CannonType)
-	{
-		Cannon = GetWorld()->SpawnActor<ACannon>(CannonType, CannonSetupPoint->GetComponentTransform());
-		Cannon->AttachToComponent(CannonSetupPoint, FAttachmentTransformRules::SnapToTargetIncludingScale);
-	}
+	SetupCannon(DefaultCannon);
 }
 
 // Called every frame
@@ -104,12 +100,46 @@ void ATankPawn::RotateTurretTo(FVector TargetPosition) const
 
 void ATankPawn::Fire()
 {
-	if(Cannon)
-		Cannon->Fire();
+	if(CurrentCannon)
+		CurrentCannon->Fire();
 }
 
 void ATankPawn::FireSpecial()
 {
-	if(Cannon)
-	Cannon->FireSpecial();
+	if(CurrentCannon)
+	CurrentCannon->FireSpecial();
+}
+
+void ATankPawn::SetupCannon(TSubclassOf<ACannon> NewCannon)
+{
+	if (CurrentCannon)
+	{
+		CurrentCannon->Destroy();
+	}
+
+	if (NewCannon)
+	{
+		auto Transform = CannonSetupPoint->GetComponentTransform();
+		CurrentCannon = GetWorld()->SpawnActor<ACannon>(NewCannon, Transform);
+		CurrentCannon->AttachToComponent(CannonSetupPoint, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+	}
+}
+
+void ATankPawn::SwitchCannon()
+{
+	Swap(CurrentCannon, ReserveCannon);
+	if (CurrentCannon)
+	{
+		CurrentCannon->SetVisibility(true);
+	}
+
+	if (ReserveCannon)
+	{
+		ReserveCannon->SetVisibility(false);
+	}
+}
+
+ACannon* ATankPawn::GetActiveCannon() const
+{
+	return CurrentCannon;
 }

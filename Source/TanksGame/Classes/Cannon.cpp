@@ -78,6 +78,16 @@ bool ACannon::HasSpecialFire() const
 	return bHasSpecialFire;
 }
 
+void ACannon::AddAmmo(int32 Value)
+{
+	AmmoAmount = FMath::Clamp(AmmoAmount + Value, 0, MaxAmmo);
+}
+
+void ACannon::SetVisibility(bool bIsVisible)
+{
+	Mesh->SetHiddenInGame(!bIsVisible);
+}
+
 void ACannon::Reload()
 {
 	bIsReadyToFire = true;

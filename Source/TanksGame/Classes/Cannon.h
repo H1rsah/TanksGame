@@ -26,7 +26,7 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Fire params")
 	float FireRate = 1;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Fire params")
-	float FireRange = 100;
+	float FireRange = 3000;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Fire params")
 	float FireDamage = 1;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Fire params")
@@ -57,6 +57,8 @@ public:
 	void FireSpecial();
 	bool IsReadyToFire();
 	bool HasSpecialFire() const;
+	void AddAmmo(int32 Value);
+	void SetVisibility(bool bIsVisible);
 	
 protected:
 	// Called when the game starts or when spawned
