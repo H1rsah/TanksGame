@@ -3,6 +3,10 @@
 
 #include "Projectile.h"
 
+#include "Damageable.h"
+#include "Scoreable.h"
+#include "TankPawn.h"
+
 
 // Sets default values
 AProjectile::AProjectile()
@@ -61,10 +65,34 @@ void AProjectile::Tick(float DeltaTime)
 
 void AProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& SweepResult)
 {
+	if (OtherActor == GetInstigator())
+	{
+		Destroy();
+		return;
+	}
+	
 	if (OtherActor && OtherComp && OtherComp->GetCollisionObjectType() == ECC_Destructible)
 	{
 		OtherActor->Destroy();
 	}
+	else if (IDamageable* Damageable = Cast<IDamageable>(OtherActor))
+	{
+		FDamageTypes DamageType;
+		DamageType.DamageValue = Damage;
+		DamageType.Instigator = GetInstigator();
+		DamageType.DamageMaker = this;
+		Damageable->TakeDamage(DamageType);
+	}
+
+	if(Cast<IScoreable>(OtherActor) && !IsValid(OtherActor))
+	{
+		ATankPawn* Tank = Cast<ATankPawn>(GetInstigator());
+		if(Tank)
+		{
+			Tank->AddScore();
+		}
+	}
+
 	Stop();
 }
 

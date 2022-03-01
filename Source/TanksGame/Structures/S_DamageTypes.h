@@ -11,9 +11,17 @@ enum class ECannonType : uint8 {
 };
 
 
-USTRUCT()
-struct FS_DamageTypes
+USTRUCT(BlueprintType)
+struct FDamageTypes
 {
 	GENERATED_BODY()
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float DamageValue;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	AActor* Instigator;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	AActor* DamageMaker;
 };

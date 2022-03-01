@@ -6,11 +6,28 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Components/BoxComponent.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "Kismet/KismetSystemLibrary.h"
 
 // Called to bind functionality to input
 void ATankPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
+}
+
+void ATankPawn::TakeDamage(const FDamageTypes& Damage)
+{
+	if(HealthComponent)
+		HealthComponent->TakeDamage(Damage);
+}
+
+void ATankPawn::OnHealthChanged(float X)
+{
+	GEngine->AddOnScreenDebugMessage(123, 2, FColor::Red, FString::Printf(TEXT("Health: %f; Damage: %f"), HealthComponent->CurrentHealth, X));
+}
+
+void ATankPawn::OnDie()
+{
+	UKismetSystemLibrary::QuitGame(GetWorld(), GetWorld()->GetFirstPlayerController(), EQuitPreference::Quit, true);
 }
 
 // Sets default values
@@ -43,6 +60,10 @@ ATankPawn::ATankPawn()
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	Camera->SetupAttachment(SpringArm);
 
+	
+	HealthComponent = CreateDefaultSubobject<UHealthComponent>("Health Component");
+	HealthComponent->OnHealthChanged.AddDynamic(this, &ATankPawn::OnHealthChanged);
+	HealthComponent->OnDie.AddDynamic(this, &ATankPawn::OnDie);
 }
 
 // Called when the game starts or when spawned
@@ -77,6 +98,9 @@ void ATankPawn::Tick(float DeltaTime)
 	{
 		RotateTurretTo(TankController->GetMousePos());
 	}
+
+	// Score
+	GEngine->AddOnScreenDebugMessage(-1, 0, FColor::Black, FString::Printf(TEXT("Score: %d"), GetScore()));
 }
 
 void ATankPawn::MoveForward(float AxisValue)
@@ -107,7 +131,7 @@ void ATankPawn::Fire()
 void ATankPawn::FireSpecial()
 {
 	if(CurrentCannon)
-	CurrentCannon->FireSpecial();
+		CurrentCannon->FireSpecial();
 }
 
 void ATankPawn::SetupCannon(TSubclassOf<ACannon> NewCannon)
@@ -119,8 +143,10 @@ void ATankPawn::SetupCannon(TSubclassOf<ACannon> NewCannon)
 
 	if (NewCannon)
 	{
-		auto Transform = CannonSetupPoint->GetComponentTransform();
-		CurrentCannon = GetWorld()->SpawnActor<ACannon>(NewCannon, Transform);
+		FActorSpawnParameters Params;
+		Params.Instigator = this;
+		Params.Owner = this;
+		CurrentCannon = GetWorld()->SpawnActor<ACannon>(NewCannon, CannonSetupPoint->GetComponentTransform(), Params);
 		CurrentCannon->AttachToComponent(CannonSetupPoint, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
 	}
 }

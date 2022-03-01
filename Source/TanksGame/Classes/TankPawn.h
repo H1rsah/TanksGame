@@ -5,13 +5,16 @@
 
 #include "CoreMinimal.h"
 #include "Cannon.h"
+#include "Damageable.h"
+#include "HealthComponent.h"
+#include "Scoreable.h"
 #include "TankPlayerController.h"
 #include "Components/ArrowComponent.h"
 #include "GameFramework/Pawn.h"
 #include "TankPawn.generated.h"
 
 UCLASS()
-class TANKSGAME_API ATankPawn : public APawn
+class TANKSGAME_API ATankPawn : public APawn, public IDamageable, public IScoreable
 {
 	GENERATED_BODY()
 
@@ -28,6 +31,8 @@ protected:
 	class UCameraComponent* Camera;
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
 	UArrowComponent * CannonSetupPoint;
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
+	UHealthComponent* HealthComponent;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Turret")
 	TSubclassOf<ACannon> DefaultCannon;
@@ -47,10 +52,9 @@ protected:
 	float RotationInterpolation = 0.1f;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Movement|Speed")
 	float TurretRotationInterpolation = 0.05f;
-
+	
 	UPROPERTY()
 	ATankPlayerController* TankController;
-
 public:
 	// Sets default values for this pawn's properties
 	ATankPawn();
@@ -79,12 +83,22 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	virtual void TakeDamage(const FDamageTypes& Damage) override;
+	int32 GetScore() const { return TargetsDestroyed; };
+	void AddScore() { TargetsDestroyed += DestructionScore; };
+
 private:
 	float TargetForwardAxisValue, CurrentForwardAxisValue;
 	float TargetRotationAxisValue, CurrentRotationAxisValue;
+	int32 TargetsDestroyed = 0, DestructionScore = 1;
 
 	UPROPERTY()
 	ACannon* CurrentCannon = nullptr;
 	UPROPERTY()
 	ACannon* ReserveCannon = nullptr;
+	
+	UFUNCTION()
+	void OnHealthChanged(float X);
+	UFUNCTION()
+	void OnDie();
 };

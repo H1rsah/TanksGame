@@ -2,6 +2,8 @@
 
 
 #include "Cannon.h"
+
+#include "Damageable.h"
 #include "DrawDebugHelpers.h"
 
 
@@ -34,7 +36,6 @@ void ACannon::BeginPlay()
 void ACannon::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	GEngine->AddOnScreenDebugMessage(-1, 0, FColor::Cyan,FString::Printf(TEXT("Ammo: %d"), AmmoAmount));
 }
 
 void ACannon::Fire() 
@@ -105,6 +106,7 @@ void ACannon::Shot()
 		const FTransform SpawnTransform(ProjectileSpawnPoint->GetComponentRotation(), ProjectileSpawnPoint->GetComponentLocation(), FVector::OneVector);
 		AProjectile* MyProjectile = Cast<AProjectile>(Pool->RetreiveActor(ProjectileActor, SpawnTransform));
 		if(MyProjectile)
+			MyProjectile->SetInstigator(GetInstigator());
 			MyProjectile->Start();
 	}
 	else
@@ -122,6 +124,15 @@ void ACannon::Shot()
 			if (Hit.Actor.IsValid() && Hit.Component.IsValid(), Hit.Component->GetCollisionObjectType() == ECC_Destructible)
 			{
 				Hit.Actor->Destroy();
+
+			}
+
+			if (IDamageable* Damageable = Cast<IDamageable>(Hit.Actor))
+			{
+				FDamageTypes DamageType;
+				DamageType.DamageMaker = this;
+				DamageType.DamageValue = LaserDamage;
+				Damageable->TakeDamage(DamageType);
 			}
 		}
 		else
