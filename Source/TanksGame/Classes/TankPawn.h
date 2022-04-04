@@ -5,12 +5,12 @@
 
 #include "CoreMinimal.h"
 #include "Cannon.h"
-#include "Damageable.h"
-#include "HealthComponent.h"
-#include "Scoreable.h"
-#include "TankPlayerController.h"
 #include "Components/ArrowComponent.h"
 #include "GameFramework/Pawn.h"
+#include "TanksGame/Components/HealthComponent.h"
+#include "TanksGame/Controllers/TankPlayerController.h"
+#include "TanksGame/Interfaaces/Damageable.h"
+#include "TanksGame/Interfaaces/Scoreable.h"
 #include "TankPawn.generated.h"
 
 UCLASS()

@@ -4,11 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "Cannon.h"
-#include "Damageable.h"
-#include "HealthComponent.h"
-#include "Scoreable.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/Actor.h"
+#include "TanksGame/Components/HealthComponent.h"
+#include "TanksGame/Interfaaces/Damageable.h"
+#include "TanksGame/Interfaaces/Scoreable.h"
 #include "Turret.generated.h"
 
 UCLASS()

@@ -65,7 +65,7 @@ void UActorPool::OnActorDestroyed(AActor* Actor)
 {
     check(IsActorInPool(Actor));
     TArray<AActor*>* Pool = InactiveActors.Find(Actor->GetClass());
-    if (Pool && Pool->Contains(Actor))
+    if (Pool)
     {
         Pool->Remove(Actor);
     }

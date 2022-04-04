@@ -3,10 +3,10 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "HealthComponent.h"
 #include "Cannon.h"
 #include "Components/ArrowComponent.h"
 #include "GameFramework/Actor.h"
+#include "TanksGame/Components/HealthComponent.h"
 #include "UnitParent.generated.h"
 
 UCLASS()
@@ -40,6 +40,8 @@ public:
 	class UCameraComponent* Camera;
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
 	UArrowComponent * CannonSetupPoint;
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
+	UHealthComponent* HealthComponent;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Turret|Cannon")
 	TSubclassOf<ACannon> Cannon;

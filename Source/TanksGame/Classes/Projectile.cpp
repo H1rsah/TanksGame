@@ -3,8 +3,7 @@
 
 #include "Projectile.h"
 
-#include "Damageable.h"
-#include "Scoreable.h"
+
 #include "TankPawn.h"
 
 
