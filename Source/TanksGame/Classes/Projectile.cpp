@@ -85,15 +85,6 @@ void AProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimi
 		Damageable->TakeDamage(DamageType);
 	}
 
-	if(Cast<IScoreable>(OtherActor) && !IsValid(OtherActor))
-	{
-		ATankPawn* Tank = Cast<ATankPawn>(GetInstigator());
-		if(Tank)
-		{
-			Tank->AddScore();
-		}
-	}
-
 	AudioEffect->Play();
 	Stop();
 }

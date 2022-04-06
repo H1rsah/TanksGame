@@ -34,8 +34,8 @@ void ATankAIController::Tick(float DeltaTime)
 	if (MyTarget)
 		Aiming();
 
-	// if (PatrollingPoints.Num() > 0)
-		// MoveToNextPoint(DeltaTime);
+	if (PatrollingPoints.Num() > 0)
+		MoveToNextPoint(DeltaTime);
 }
 
 
@@ -55,7 +55,12 @@ void ATankAIController::GetClosestTarget()
 	if (MyPawn->TargetingRange > DistanceToTarget)
 	{
 		FHitResult Hit;
-		GetWorld()->LineTraceSingleByChannel(Hit, MyPawn->GetActorLocation(), TmpActor->GetActorLocation(), ECollisionChannel::ECC_Visibility);
+		FCollisionQueryParams Params;
+		Params.bReturnPhysicalMaterial = false;
+		Params.AddIgnoredActor(MyPawn);
+		Params.bTraceComplex = true;
+		GetWorld()->LineTraceSingleByChannel(Hit, MyPawn->GetActorLocation(), TmpActor->GetActorLocation(), ECollisionChannel::ECC_Visibility, Params);
+
 		if (Hit.Actor == TmpActor)
 			MyTarget = Cast<AUnitBase>(TmpActor);
 		else
@@ -99,8 +104,6 @@ void ATankAIController::GeneratePatrollingPoints()
 
 void ATankAIController::Aiming() const
 {
-	GEngine->AddOnScreenDebugMessage(123, 0, FColor::Yellow, "Tank Aiming!");
-
 	MyPawn->RotateTurretToTarget(MyTarget->GetActorLocation(), false);
     
 	if (MyPawn->CanFire(MyTarget->GetActorLocation()))

@@ -6,7 +6,6 @@
 AEnemyTank::AEnemyTank()
 {
 	PrimaryActorTick.bCanEverTick = true;
-	PrimaryActorTick.TickInterval = 0.005f;
 
 	Mobility = EUnitMobility::Mobile;
 }

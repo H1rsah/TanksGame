@@ -23,6 +23,9 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	virtual FVector GetShootTarget() const override { return MousePosition; };
 
+	UPROPERTY()
+	int32 PlayerScore;
+
 private:
 	virtual void BeginPlay() override;
 	void MoveForward(float AxisValue);

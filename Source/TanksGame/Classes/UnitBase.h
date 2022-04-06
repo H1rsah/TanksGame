@@ -39,6 +39,9 @@ public:
 	EUnitMobility Mobility = EUnitMobility::Static;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Targeting", meta = (EditCondition = "Mobility == EUnitMobility::Mobile", EditConditionHides))
 	FName WaypointTag = "Default";
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Components")
+	UParticleSystem* DieParticle;
 
 protected:
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
@@ -51,11 +54,6 @@ protected:
     UArrowComponent* CannonSetupPoint;
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
     UHealthComponent* HealthComponent;
-	
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
-	UParticleSystemComponent* DieParticle;
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
-	UAudioComponent* DieAudio;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Targeting")
 	float Accuracy = 5.f;
@@ -65,8 +63,8 @@ protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Cannon")
     TSubclassOf<ACannon> CannonClass;
 
-    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Scores")
-    int32 DestructionScores = 1;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Scores")
+    int32 DestructionScore = 1;
 
 	virtual void BeginPlay() override;
 	

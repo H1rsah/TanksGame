@@ -22,9 +22,11 @@ ACannon::ACannon()
 
 	ShootEffect = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("Shoot Effect"));
 	ShootEffect->SetupAttachment(Mesh);
-	
+	ShootEffect->bAutoActivate = false;
+
 	AudioEffect = CreateDefaultSubobject<UAudioComponent>(TEXT("Audio Effect"));
 	AudioEffect->SetupAttachment(Mesh);
+	AudioEffect->bAutoActivate = false;
 }
 
 // Called when the game starts or when spawned

@@ -4,6 +4,7 @@
 
 #include "UnitBase.h"
 
+#include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
 
 // Sets default values
@@ -24,13 +25,6 @@ AUnitBase::AUnitBase()
 	CannonSetupPoint->SetupAttachment(TurretMesh);
 
 	HealthComponent = CreateDefaultSubobject<UHealthComponent>(TEXT("Health component"));
-
-	
-	DieParticle = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("OnDie Effect"));
-	DieParticle->SetupAttachment(BodyMesh);
-	
-	DieAudio = CreateDefaultSubobject<UAudioComponent>(TEXT("OnDie Audio"));
-	DieAudio->SetupAttachment(BodyMesh);
 	
 	HealthComponent->OnHealthChanged.AddDynamic(this, &AUnitBase::OnHealthChanged);
 	HealthComponent->OnDie.AddDynamic(this, &AUnitBase::OnDie);
@@ -44,7 +38,6 @@ void AUnitBase::BeginPlay()
 	Params.Owner = this;
 	CurrentCannon = GetWorld()->SpawnActor<ACannon>(CannonClass, Params);
 	CurrentCannon->AttachToComponent(CannonSetupPoint, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
-
 }
 
 // Called to bind functionality to input
@@ -68,7 +61,7 @@ void AUnitBase::RotateTurretToTarget(const FVector TargetLocation, const bool bI
 		TargetRotation.Roll = 90.f;
 
 	const FRotator TurretRotation = TurretMesh->GetComponentRotation();
-	GEngine->AddOnScreenDebugMessage(-1, 0, FColor::Black, FString::Printf(TEXT("TargetRotation: (%f; %f; %f)   TurretRotation(): (%f; %f; %f)"), TargetRotation.Roll, TargetRotation.Pitch, TargetRotation.Yaw, TurretRotation.Roll, TurretRotation.Pitch, TurretRotation.Yaw));
+	// GEngine->AddOnScreenDebugMessage(-1, 0, FColor::Black, FString::Printf(TEXT("TargetRotation: (%f; %f; %f)   TurretRotation(): (%f; %f; %f)"), TargetRotation.Roll, TargetRotation.Pitch, TargetRotation.Yaw, TurretRotation.Roll, TurretRotation.Pitch, TurretRotation.Yaw));
 
 	TurretMesh->SetWorldRotation(FMath::Lerp(TurretRotation, TargetRotation, TargetingSpeed));
 }
@@ -101,9 +94,7 @@ void AUnitBase::SetAmmo(const int32 Amount) const
 
 void AUnitBase::OnDie_Implementation()
 {
-	DieAudio->Play();
-	DieParticle->ActivateSystem();
-	
+	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), DieParticle, GetActorLocation(), FRotator::ZeroRotator, FVector(3), true, EPSCPoolMethod::None, true);
 	Destroy();
 }
 
@@ -119,7 +110,7 @@ void AUnitBase::TakeDamage(const FDamageTypes& DamageData)
 
 int32 AUnitBase::GetScores() const
 {
-	return DestructionScores;
+	return DestructionScore;
 }
 
 #pragma optimize( "", on )

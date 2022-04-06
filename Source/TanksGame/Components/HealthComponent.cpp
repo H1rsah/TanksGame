@@ -2,7 +2,6 @@
 
 
 #include "HealthComponent.h"
-
 #include "TanksGame/TanksGameGameModeBase.h"
 
 
@@ -25,6 +24,8 @@ void UHealthComponent::TakeDamage(FDamageTypes DamageType)
 	{
 		if(OnDie.IsBound())
 			OnDie.Broadcast();
+		
+		Cast<ATanksGameGameModeBase>(GetWorld()->GetAuthGameMode())->NotifyActorWasDestroyedByDamage(GetOwner(), DamageType);
 	}
 	else
 		if(OnHealthChanged.IsBound())

@@ -23,8 +23,7 @@ AAmmoBox::AAmmoBox()
 
 void AAmmoBox::OnMeshOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	AEnemyTank* Tank = CastChecked<AEnemyTank>(OtherActor);
-	if (Tank)
+	if (AEnemyTank* Tank = Cast<AEnemyTank>(OtherActor))
 	{
 		ACannon* Cannon = Tank->GetActiveCannon();
 		if (Cannon && Cannon->GetClass() == CannonClass)

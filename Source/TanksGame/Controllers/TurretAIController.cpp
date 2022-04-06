@@ -46,8 +46,13 @@ void ATurretAIController::GetClosestTarget()
 	AActor* TmpActor = UGameplayStatics::FindNearestActor(MyPawn->GetActorLocation(), PotentialTargets, DistanceToTarget);
 	if (MyPawn->TargetingRange > DistanceToTarget)
 	{
+
 		FHitResult Hit;
-		GetWorld()->LineTraceSingleByChannel(Hit, MyPawn->GetActorLocation(), TmpActor->GetActorLocation(), ECollisionChannel::ECC_Visibility);
+		FCollisionQueryParams Params;
+		Params.bReturnPhysicalMaterial = false;
+		Params.AddIgnoredActor(MyPawn);
+		Params.bTraceComplex = true;
+		GetWorld()->LineTraceSingleByChannel(Hit, MyPawn->GetActorLocation(), TmpActor->GetActorLocation(), ECollisionChannel::ECC_Visibility, Params);
 		if (Hit.Actor == TmpActor)
 			MyTarget = Cast<AUnitBase>(TmpActor);
 		else

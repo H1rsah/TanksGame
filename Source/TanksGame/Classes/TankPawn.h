@@ -18,6 +18,8 @@ UCLASS()
 class TANKSGAME_API ATankPawn : public APawn, public IDamageable, public IScoreable
 {
 	GENERATED_BODY()
+	// Sets default values for this pawn's properties
+	ATankPawn();
 
 protected:
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
@@ -58,10 +60,8 @@ protected:
 	
 	UPROPERTY()
 	ATankPlayerController* TankController;
+	
 public:
-	// Sets default values for this pawn's properties
-	ATankPawn();
-
 	UFUNCTION(BlueprintPure, Category = "AI|Move params")
 	float GetMovementAccuracy() const { return MovementAccuracy; }
 	UFUNCTION(BlueprintCallable, Category = "Movement")
@@ -95,7 +95,6 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	virtual void TakeDamage(const FDamageTypes& Damage) override;
-	int32 GetScore() const { return TargetsDestroyed; };
 	void AddScore() { TargetsDestroyed += DestructionScore; };
 
 private:

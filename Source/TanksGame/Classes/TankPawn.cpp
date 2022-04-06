@@ -58,7 +58,6 @@ ATankPawn::ATankPawn()
 
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	Camera->SetupAttachment(SpringArm);
-
 	
 	HealthComponent = CreateDefaultSubobject<UHealthComponent>("Health Component");
 	HealthComponent->OnHealthChanged.AddDynamic(this, &ATankPawn::OnHealthChanged);
@@ -99,7 +98,7 @@ void ATankPawn::Tick(float DeltaTime)
 	}
 
 	// Score
-	GEngine->AddOnScreenDebugMessage(-1, 0, FColor::Black, FString::Printf(TEXT("Score: %d"), GetScore()));
+	GEngine->AddOnScreenDebugMessage(-1, 0, FColor::Black, FString::Printf(TEXT("Score: %d"), TankController->PlayerScore));
 }
 
 void ATankPawn::MoveForward(float AxisValue)
