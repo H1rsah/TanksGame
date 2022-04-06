@@ -6,6 +6,7 @@
 #include "CoreMinimal.h"
 #include "Cannon.h"
 #include "Components/ArrowComponent.h"
+#include "Components/BoxComponent.h"
 #include "GameFramework/Pawn.h"
 #include "TanksGame/Components/HealthComponent.h"
 #include "TanksGame/Controllers/TankPlayerController.h"
@@ -20,11 +21,11 @@ class TANKSGAME_API ATankPawn : public APawn, public IDamageable, public IScorea
 
 protected:
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
-	class UBoxComponent* HitBox;
+	UBoxComponent* HitBox;
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Components")
-	class UStaticMeshComponent* BodyMesh;
+	UStaticMeshComponent* BodyMesh;
     UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Components")
-	class UStaticMeshComponent* TurretMesh;
+	UStaticMeshComponent* TurretMesh;
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
 	class USpringArmComponent* SpringArm;
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
@@ -52,6 +53,8 @@ protected:
 	float RotationInterpolation = 0.1f;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Movement|Speed")
 	float TurretRotationInterpolation = 0.05f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI|Move params")
+	float MovementAccuracy = 50.f;
 	
 	UPROPERTY()
 	ATankPlayerController* TankController;
@@ -59,6 +62,8 @@ public:
 	// Sets default values for this pawn's properties
 	ATankPawn();
 
+	UFUNCTION(BlueprintPure, Category = "AI|Move params")
+	float GetMovementAccuracy() const { return MovementAccuracy; }
 	UFUNCTION(BlueprintCallable, Category = "Movement")
 	void MoveForward(float AxisValue);
 	UFUNCTION(BlueprintCallable, Category = "Movement")
@@ -75,7 +80,13 @@ public:
 	void SwitchCannon();
 	UFUNCTION(BlueprintPure, Category = "Turret")
 	ACannon* GetActiveCannon() const;
-
+	UFUNCTION(BlueprintCallable, Category = "Turret")
+	void SetTurretTargetPosition(const FVector& Target);
+	UFUNCTION(BlueprintPure, Category = "Turret")
+	FVector GetTurretForwardVector();
+		
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI|Move")
+	FName WaypointTag;
 	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

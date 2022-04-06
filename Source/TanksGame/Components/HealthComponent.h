@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
-#include "TanksGame/Structures/S_DamageTypes.h"
+#include "TanksGame/Structures/GameStructures.h"
 #include "HealthComponent.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnDie);
@@ -30,7 +30,7 @@ public:
 	FOnDie OnDie;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
-	float MaxHealth = 10.f;
+	float MaxHealth = 20.f;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	float CurrentHealth;
 	

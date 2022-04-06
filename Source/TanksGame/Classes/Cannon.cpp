@@ -19,6 +19,12 @@ ACannon::ACannon()
 
 	ProjectileSpawnPoint = CreateDefaultSubobject<UArrowComponent>("Spawn point");
 	ProjectileSpawnPoint->SetupAttachment(Mesh);
+
+	ShootEffect = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("Shoot Effect"));
+	ShootEffect->SetupAttachment(Mesh);
+	
+	AudioEffect = CreateDefaultSubobject<UAudioComponent>(TEXT("Audio Effect"));
+	AudioEffect->SetupAttachment(Mesh);
 }
 
 // Called when the game starts or when spawned
@@ -29,6 +35,14 @@ void ACannon::BeginPlay()
 	BurstShotsLeft = 0;
 	AmmoAmount = MaxAmmo;
 	bIsReadyToFire = true;
+}
+
+void ACannon::EndPlay(EEndPlayReason::Type EndPlayReason)
+{
+	Super::EndPlay(EndPlayReason);
+
+	GetWorld()->GetTimerManager().ClearTimer(ReloadTimerHandle);
+	GetWorld()->GetTimerManager().ClearTimer(BurstTimerHandle);
 }
 
 // Called every frame
@@ -57,18 +71,10 @@ void ACannon::FireSpecial()
 	--AmmoAmount;
 	BurstShotsLeft = BurstShotsAmount;
 
-	if (CannonType == ECannonType::FireProjectile)
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 2, FColor::Yellow, TEXT("Fire special - projectile"));
-	}
-	else
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 2, FColor::Yellow, TEXT("Fire special - trace"));
-	}
 	Shot();
 }
 
-bool ACannon::IsReadyToFire()
+bool ACannon::IsReadyToFire() const
 {
     return bIsReadyToFire && AmmoAmount > 0 && BurstShotsLeft == 0;
 }
@@ -78,12 +84,12 @@ bool ACannon::HasSpecialFire() const
 	return bHasSpecialFire;
 }
 
-void ACannon::AddAmmo(int32 Value)
+void ACannon::AddAmmo(const int32 Value)
 {
 	AmmoAmount = FMath::Clamp(AmmoAmount + Value, 0, MaxAmmo);
 }
 
-void ACannon::SetVisibility(bool bIsVisible)
+void ACannon::SetVisibility(bool bIsVisible) const
 {
 	Mesh->SetHiddenInGame(!bIsVisible);
 }
@@ -99,18 +105,36 @@ void ACannon::Shot()
 	check(BurstShotsLeft > 0);
 	if (CannonType == ECannonType::FireProjectile)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 2, FColor::Green,"Fire Projectile");
+		// GEngine->AddOnScreenDebugMessage(-1, 2, FColor::Green,"Fire Projectile");
 
 		UActorPool* Pool = GetWorld()->GetSubsystem<UActorPool>();
 		const FTransform SpawnTransform(ProjectileSpawnPoint->GetComponentRotation(), ProjectileSpawnPoint->GetComponentLocation(), FVector::OneVector);
 		AProjectile* MyProjectile = Cast<AProjectile>(Pool->RetreiveActor(ProjectileActor, SpawnTransform));
 		if(MyProjectile)
+		{
 			MyProjectile->SetInstigator(GetInstigator());
-			MyProjectile->Start();
+		}
+		MyProjectile->Start();
+
+		ShootEffect->ActivateSystem();
+		if (GetOwner() == GetWorld()->GetFirstPlayerController()->GetPawn())
+		{
+			if(ShootForceEffect)
+			{
+				FForceFeedbackParameters EffectParams;
+				EffectParams.bLooping = false;
+				EffectParams.Tag = "EffectParams";
+				GetWorld()->GetFirstPlayerController()->ClientPlayForceFeedback(ShootForceEffect, EffectParams);
+			}
+			if(ShootShake)
+			{
+				GetWorld()->GetFirstPlayerController()->ClientStartCameraShake(ShootShake);
+			}
+		}
 	}
 	else
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 2, FColor::Red,"Fire Trace");
+		// GEngine->AddOnScreenDebugMessage(-1, 2, FColor::Red,"Fire Trace");
 
         FHitResult Hit;
         FVector TraceStart = ProjectileSpawnPoint->GetComponentLocation();
@@ -136,9 +160,10 @@ void ACannon::Shot()
 		}
 		else
 		{
-			DrawDebugLine(GetWorld(), TraceStart, TraceEnd, FColor::Red, false, 0.5f, 0, 5.f);
+			DrawDebugLine(GetWorld(), TraceStart, TraceEnd, FColor::Red, false, 0.2f, 0, 5.f);
 		}
 	}
+	AudioEffect->Play();
 
 	if (--BurstShotsLeft > 0)
 	{

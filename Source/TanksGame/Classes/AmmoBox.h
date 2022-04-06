@@ -24,7 +24,7 @@ protected:
 	TSubclassOf<ACannon> CannonClass;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ammo")
 	int32 AmmoAmount;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Ammo")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ammo")
 	bool bIsInfiniteAmmo = false;
 
 

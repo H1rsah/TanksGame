@@ -1,6 +1,5 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "TankPawn.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
@@ -96,7 +95,7 @@ void ATankPawn::Tick(float DeltaTime)
 	// Turret rotation
 	if(TankController)
 	{
-		RotateTurretTo(TankController->GetMousePos());
+		RotateTurretTo(TankController->GetShootTarget());
 	}
 
 	// Score
@@ -169,3 +168,14 @@ ACannon* ATankPawn::GetActiveCannon() const
 {
 	return CurrentCannon;
 }
+
+void ATankPawn::SetTurretTargetPosition(const FVector& Target)
+{
+	RotateTurretTo(Target);
+}
+
+FVector ATankPawn::GetTurretForwardVector()
+{
+	return TurretMesh->GetForwardVector();
+}
+

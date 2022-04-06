@@ -2,12 +2,13 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
+#include "TanksGame/Interfaaces/Targetable.h"
 #include "TankPlayerController.generated.h"
 
 class ATankPawn;
 
 UCLASS()
-class TANKSGAME_API ATankPlayerController : public APlayerController
+class TANKSGAME_API ATankPlayerController : public APlayerController, public ITargetable
 {
 	GENERATED_BODY()
 
@@ -20,7 +21,7 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupInputComponent() override;
 	virtual void Tick(float DeltaTime) override;
-	FVector GetMousePos() const { return MousePosition; };
+	virtual FVector GetShootTarget() const override { return MousePosition; };
 
 private:
 	virtual void BeginPlay() override;

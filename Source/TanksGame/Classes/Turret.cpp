@@ -11,7 +11,7 @@
 ATurret::ATurret()
 {
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = false;
+	PrimaryActorTick.bCanEverTick = true;
 
 	Collision = CreateDefaultSubobject<UCapsuleComponent>("Collision");
 	RootComponent = Collision;
@@ -39,6 +39,8 @@ ATurret::ATurret()
 void ATurret::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	
+	Tracking();
 }
 
 void ATurret::TakeDamage(const FDamageTypes& Damage)
@@ -74,8 +76,7 @@ void ATurret::Destroyed()
 		Cannon->Destroy();
 }
 
-void ATurret::OnBeginOverlap(UPrimitiveComponent* PrimitiveComponent, AActor* Actor,
-                             UPrimitiveComponent* OtherComponent, int I, bool bArg, const FHitResult& HitResult)
+void ATurret::OnBeginOverlap(UPrimitiveComponent* PrimitiveComponent, AActor* Actor, UPrimitiveComponent* OtherComponent, int I, bool bArg, const FHitResult& HitResult)
 {
 	OtherActors.Add(GetWorld()->GetFirstPlayerController()->GetPawn());
 	if(!Target.IsValid())
@@ -105,7 +106,7 @@ void ATurret::OnDie()
 
 void ATurret::FindNextTarget()
 {
-	float MinRange = 1000;
+	float MinRange = 2000;
 	Target = nullptr;
 	for(auto Actor : OtherActors)
 	{
@@ -126,6 +127,7 @@ void ATurret::Tracking()
 	{
 		return;
 	}
+	
 	FRotator TargetRotation = UKismetMathLibrary::FindLookAtRotation(TurretMesh->GetComponentLocation(), Target->GetActorLocation());
 	TargetRotation.Roll = 90.f;
 	TurretMesh->SetWorldRotation(FMath::Lerp(TurretMesh->GetComponentRotation(), TargetRotation, TrackingSpeed));

@@ -19,7 +19,9 @@ AProjectile::AProjectile()
 	Mesh->SetupAttachment(RootComponent);
 	Mesh->OnComponentHit.AddDynamic(this, &AProjectile::OnHit);
 	Mesh->SetHiddenInGame(true);
-	RootComponent = Mesh;
+
+	AudioEffect = CreateDefaultSubobject<UAudioComponent>(TEXT("Audio Effect"));
+	AudioEffect->SetupAttachment(RootComponent);
 }
 
 
@@ -92,6 +94,7 @@ void AProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimi
 		}
 	}
 
+	AudioEffect->Play();
 	Stop();
 }
 

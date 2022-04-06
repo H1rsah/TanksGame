@@ -2,7 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "Engine/UserDefinedStruct.h"
-#include "S_DamageTypes.generated.h"
+#include "GameStructures.generated.h"
 
 UENUM(BlueprintType)
 enum class ECannonType : uint8 {
@@ -10,6 +10,11 @@ enum class ECannonType : uint8 {
 	FireTrace = 1 UMETA(DisplayName = "Use trace")
 };
 
+UENUM(BlueprintType)
+enum class EUnitMobility : uint8 {
+	Static = 0 UMETA(DisplayName = "Static"),
+	Mobile = 1 UMETA(DisplayName = "Mobile")
+};
 
 USTRUCT(BlueprintType)
 struct FDamageTypes

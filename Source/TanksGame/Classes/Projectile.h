@@ -15,13 +15,16 @@ class TANKSGAME_API AProjectile : public AActor
 	
 protected:
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
-	class UStaticMeshComponent* Mesh;
+	UAudioComponent* AudioEffect;
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
+	UStaticMeshComponent* Mesh;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Movement")
 	float MoveSpeed = 500.f;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Movement")
 	float FireRange = 3000.f;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Damage")
 	float Damage = 1.f;
+
 
 
 public:

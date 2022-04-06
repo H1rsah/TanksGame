@@ -3,6 +3,9 @@
 
 #include "AmmoBox.h"
 
+#include "EnemyTank.h"
+#include "UnitBase.h"
+
 
 // Sets default values
 AAmmoBox::AAmmoBox()
@@ -20,17 +23,17 @@ AAmmoBox::AAmmoBox()
 
 void AAmmoBox::OnMeshOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	ATankPawn* PlayerPawn = Cast<ATankPawn>(GetWorld()->GetFirstPlayerController()->GetPawn());
-	if (OtherActor == PlayerPawn)
+	AEnemyTank* Tank = CastChecked<AEnemyTank>(OtherActor);
+	if (Tank)
 	{
-		ACannon* Cannon = PlayerPawn->GetActiveCannon();
+		ACannon* Cannon = Tank->GetActiveCannon();
 		if (Cannon && Cannon->GetClass() == CannonClass)
 		{
 			Cannon->AddAmmo(AmmoAmount);
 		}
 		else
 		{
-			PlayerPawn->SetupCannon(CannonClass);
+			Tank->SetupCannon(CannonClass);
 		}
 
 		if(!bIsInfiniteAmmo)
