@@ -47,6 +47,11 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Components")
 	UParticleSystem* DieParticle;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Effects")
+	UForceFeedbackEffect* HitForceEffect;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Effects")
+	TSubclassOf<UCameraShakeBase> HitShake;
+	
 protected:
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
 	UBoxComponent* HitBox;

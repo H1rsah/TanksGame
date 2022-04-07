@@ -67,6 +67,23 @@ void APlayerTank::Tick(float DeltaTime)
 	GEngine->AddOnScreenDebugMessage(-1, 0, FColor::Black, FString::Printf(TEXT("Score: %d"), TankController->PlayerScore));
 }
 
+void APlayerTank::TakeDamage(const FDamageTypes& DamageType)
+{
+	Super::TakeDamage(DamageType);
+
+	if(HitForceEffect)
+	{
+		FForceFeedbackParameters EffectParams;
+		EffectParams.bLooping = false;
+		EffectParams.Tag = "EffectParams";
+		GetWorld()->GetFirstPlayerController()->ClientPlayForceFeedback(HitForceEffect, EffectParams);
+	}
+	if(HitShake)
+	{
+		GetWorld()->GetFirstPlayerController()->ClientStartCameraShake(HitShake);
+	}
+}
+
 void APlayerTank::MoveForward(float AxisValue)
 {
 	TargetForwardAxisValue = AxisValue;

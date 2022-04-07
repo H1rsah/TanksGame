@@ -21,6 +21,7 @@ class TANKSGAME_API APlayerTank : public AUnitBase
 	
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
+	virtual void TakeDamage(const FDamageTypes& DamageType) override;
 
 protected:
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
@@ -41,7 +42,7 @@ protected:
 	float RotationInterpolation = 0.1f;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Movement|Speed")
 	float TurretRotationInterpolation = 0.05f;
-	
+
 	UPROPERTY()
 	APlayerTankController* TankController;
 
