@@ -1,22 +1,25 @@
+// Fill out your copyright notice in the Description page of Project Settings.
+
 #pragma once
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
 #include "TanksGame/Interfaaces/Targetable.h"
-#include "TankPlayerController.generated.h"
+#include "PlayerTankController.generated.h"
 
-class ATankPawn;
 
+class APlayerTank;
+/**
+ * 
+ */
 UCLASS()
-class TANKSGAME_API ATankPlayerController : public APlayerController, public ITargetable
+class TANKSGAME_API APlayerTankController : public APlayerController, public ITargetable
 {
 	GENERATED_BODY()
 	
-	virtual void BeginPlay() override;
-
 protected:
 	UPROPERTY()
-	ATankPawn* TankPawn;
+	APlayerTank* PlayerTankPawn;
 	FVector MousePosition;
 
 public:
@@ -29,9 +32,9 @@ public:
 	int32 PlayerScore;
 
 private:
+	virtual void BeginPlay() override;
 	void MoveForward(float AxisValue);
 	void RotateRight(float AxisValue);
-	void TurretRotateRight(float AxisValue);
 	void Fire();
 	void FireSpecial();
 	void SwitchCannon();

@@ -9,6 +9,7 @@ void ATankPlayerController::SetupInputComponent()
 
 	InputComponent->BindAxis("MoveForward", this, &ATankPlayerController::MoveForward);
 	InputComponent->BindAxis("RotateRight", this, &ATankPlayerController::RotateRight);
+	InputComponent->BindAxis("TurretRotateRight", this, &ATankPlayerController::TurretRotateRight);
 	InputComponent->BindAction("Fire", IE_Pressed, this, &ATankPlayerController::Fire);
 	InputComponent->BindAction("FireSpecial", IE_Pressed, this, &ATankPlayerController::FireSpecial);
 	InputComponent->BindAction("SwitchCannon",IE_Pressed, this, &ATankPlayerController::SwitchCannon);
@@ -44,6 +45,12 @@ void ATankPlayerController::RotateRight(float AxisValue)
 {
 	if(TankPawn)
 		TankPawn->RotateRight(AxisValue);
+}
+
+void ATankPlayerController::TurretRotateRight(float AxisValue)
+{
+	if(TankPawn)
+		TankPawn->TurretRotateRight(AxisValue);
 }
 
 void ATankPlayerController::Fire()

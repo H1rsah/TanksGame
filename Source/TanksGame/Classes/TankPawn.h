@@ -68,6 +68,8 @@ public:
 	void MoveForward(float AxisValue);
 	UFUNCTION(BlueprintCallable, Category = "Movement")
 	void RotateRight(float AxisValue);
+	UFUNCTION(BlueprintCallable, Category = "Movement")
+	void TurretRotateRight(float AxisValue);
 	UFUNCTION(BlueprintCallable, Category = "Turret")
 	void RotateTurretTo(FVector TargetPosition) const;
 	UFUNCTION(BlueprintCallable, Category = "Turret")
@@ -100,6 +102,7 @@ public:
 private:
 	float TargetForwardAxisValue, CurrentForwardAxisValue;
 	float TargetRotationAxisValue, CurrentRotationAxisValue;
+	float TargetTurretRotationAxisValue, CurrentTurretRotationAxisValue;
 	int32 TargetsDestroyed = 0, DestructionScore = 1;
 
 	UPROPERTY()

@@ -1,0 +1,67 @@
+// Fill out your copyright notice in the Description page of Project Settings.
+
+
+#include "PlayerTankController.h"
+#include "DrawDebugHelpers.h"
+#include "PlayerTank.h"
+
+void APlayerTankController::SetupInputComponent()
+{
+	Super::SetupInputComponent();
+
+	InputComponent->BindAxis("MoveForward", this, &APlayerTankController::MoveForward);
+	InputComponent->BindAxis("RotateRight", this, &APlayerTankController::RotateRight);
+	InputComponent->BindAction("Fire", IE_Pressed, this, &APlayerTankController::Fire);
+	InputComponent->BindAction("FireSpecial", IE_Pressed, this, &APlayerTankController::FireSpecial);
+	InputComponent->BindAction("SwitchCannon",IE_Pressed, this, &APlayerTankController::SwitchCannon);
+
+	bShowMouseCursor = true;
+}
+
+void APlayerTankController::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+	FVector MouseLocalPosition, MouseDirection;
+	DeprojectMousePositionToWorld(MouseLocalPosition, MouseDirection);
+	auto Z = FMath::Abs(PlayerTankPawn->GetActorLocation().Z - MouseLocalPosition.Z);
+	MousePosition = MouseLocalPosition - MouseDirection * Z /MouseDirection.Z;
+	// DrawDebugLine(GetWorld(), MouseLocalPosition, MouseLocalPosition + MouseDirection * 5000, FColor::Green, false, 0.1f, 0, 5);
+}
+
+void APlayerTankController::BeginPlay()
+{
+	Super::BeginPlay();
+
+	PlayerTankPawn = Cast<APlayerTank>(GetPawn());
+}
+
+void APlayerTankController::MoveForward(float AxisValue)
+{
+	if(PlayerTankPawn)
+		PlayerTankPawn->MoveForward(AxisValue);
+}
+
+void APlayerTankController::RotateRight(float AxisValue)
+{
+	if(PlayerTankPawn)
+		PlayerTankPawn->RotateRight(AxisValue);
+}
+
+void APlayerTankController::Fire()
+{
+	if(PlayerTankPawn)
+		PlayerTankPawn->Fire();
+}
+
+void APlayerTankController::FireSpecial()
+{
+	if(PlayerTankPawn)
+		PlayerTankPawn->FireSpecial();
+}
+
+void APlayerTankController::SwitchCannon()
+{
+	if (PlayerTankPawn)
+		PlayerTankPawn->SwitchCannon();
+}

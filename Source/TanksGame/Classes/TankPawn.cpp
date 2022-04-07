@@ -90,7 +90,7 @@ void ATankPawn::Tick(float DeltaTime)
 	FRotator CurrentRotation = GetActorRotation();
 	CurrentRotation.Yaw += RotationSpeed * CurrentRotationAxisValue * DeltaTime;
 	SetActorRotation(CurrentRotation);
-
+	
 	// Turret rotation
 	if(TankController)
 	{
@@ -107,6 +107,11 @@ void ATankPawn::MoveForward(float AxisValue)
 }
 
 void ATankPawn::RotateRight(float AxisValue)
+{
+	TargetRotationAxisValue = AxisValue;
+}
+
+void ATankPawn::TurretRotateRight(float AxisValue)
 {
 	TargetRotationAxisValue = AxisValue;
 }
