@@ -17,8 +17,11 @@ class TANKSGAME_API AEnemyTank : public AUnitBase
 	AEnemyTank();
 	virtual void Tick(float DeltaSeconds) override;
 
+	float TargetForwardAxisValue, CurrentForwardAxisValue;
+	float TargetRotationAxisValue, CurrentRotationAxisValue;
+	
 public:
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Movement|Speed")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement|Speed")
 	float MoveSpeed = 500;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Movement|Speed")
 	float RotationSpeed = 100;
@@ -28,17 +31,17 @@ public:
 	float RotationInterpolation = 0.1f;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Movement|Speed")
 	float TurretRotationInterpolation = 0.05f;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI|Move params")
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement|AI move params")
 	float MovementAccuracy = 50.f;
-
-	UFUNCTION(BlueprintPure, Category = "AI|Move params")
-	float GetMovementAccuracy() const { return MovementAccuracy; }
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement|AI move params", meta = (ClampMin = 5.f, ClampMax = 175.f))
+	float RotationOnPlaceAngle = 30.f;
+	
 	UFUNCTION(BlueprintCallable, Category = "Movement")
 	void MoveForward(float AxisValue);
 	UFUNCTION(BlueprintCallable, Category = "Movement")
 	void RotateRight(float AxisValue);
-
-private:
-	float TargetForwardAxisValue, CurrentForwardAxisValue;
-	float TargetRotationAxisValue, CurrentRotationAxisValue;
+	
+	UFUNCTION()
+	float GetMovementAccuracy() const { return MovementAccuracy; }
 };

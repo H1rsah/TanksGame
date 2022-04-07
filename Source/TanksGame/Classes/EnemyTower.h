@@ -16,4 +16,8 @@ class TANKSGAME_API AEnemyTower : public AUnitBase
 	
 	AEnemyTower();
 	virtual void BeginPlay() override;
+	
+protected:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Fire params")
+	int32 TowerAmmoAmount = 50;
 };

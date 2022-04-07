@@ -12,5 +12,5 @@ void AEnemyTower::BeginPlay()
 {
 	Super::BeginPlay();
 
-	SetAmmo(200);
+	SetAmmo(TowerAmmoAmount);
 }

@@ -125,7 +125,7 @@ void AUnitBase::OnDie_Implementation()
 
 void AUnitBase::OnHealthChanged_Implementation(float Damage)
 {
-	GEngine->AddOnScreenDebugMessage(123, 2, FColor::Red, FString::Printf(TEXT("TURRET Health: %f; Damage: %f"), HealthComponent->CurrentHealth, Damage));
+	// GEngine->AddOnScreenDebugMessage(123, 2, FColor::Red, FString::Printf(TEXT("TURRET Health: %f; Damage: %f"), HealthComponent->CurrentHealth, Damage));
 }
 
 void AUnitBase::TakeDamage(const FDamageTypes& DamageData)

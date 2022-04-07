@@ -143,13 +143,12 @@ void ATankAIController::MoveToNextPoint(float DeltaTime)
 	if (RightAngle > 90.f)
 		RotationValue = -RotationValue;
 
-	if (ForwardAngle > 45 )
+	if (ForwardAngle > MyPawn->RotationOnPlaceAngle)
 		MyPawn->MoveForward(0);
 	else
 		MyPawn->MoveForward(1);
 
 	MyPawn->RotateRight(RotationValue);
-
 }
 
 #pragma optimize( "", on )

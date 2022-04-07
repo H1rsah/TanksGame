@@ -5,7 +5,7 @@
 #include "Controllers/PlayerTankController.h"
 #include "Interfaaces/Scoreable.h"
 
-void ATanksGameGameModeBase::NotifyActorWasDestroyedByDamage(AActor* Actor, FDamageTypes& DamageType)
+void ATanksGameGameModeBase::NotifyActorWasDestroyedByDamage(AActor* Actor, const FDamageTypes& DamageType) const
 {
 	if (IScoreable* Scoreable = Cast<IScoreable>(Actor))
 	{

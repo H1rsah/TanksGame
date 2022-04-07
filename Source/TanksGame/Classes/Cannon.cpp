@@ -157,6 +157,7 @@ void ACannon::Shot()
 				FDamageTypes DamageType;
 				DamageType.DamageMaker = this;
 				DamageType.DamageValue = LaserDamage;
+				DamageType.Instigator = GetInstigator();
 				Damageable->TakeDamage(DamageType);
 			}
 		}

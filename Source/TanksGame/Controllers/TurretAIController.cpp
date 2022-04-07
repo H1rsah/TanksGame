@@ -1,5 +1,4 @@
 // Fill out your copyright notice in the Description page of Project Settings.
-#pragma optimize( "", off )
 
 
 #include "TurretAIController.h"
@@ -76,5 +75,3 @@ void ATurretAIController::Aiming() const
 		MyPawn->Fire();
 	}
 }
-
-#pragma optimize( "", on )

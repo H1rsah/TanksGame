@@ -40,8 +40,7 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Fire params")
 	bool bHasSpecialFire = false;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Fire params")
-	float LaserDamage = 4;
-
+	float LaserDamage = 5;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Fire params")
 	int32 MaxAmmo = 10;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, meta = (ClampMin = 1), Category = "Fire params")

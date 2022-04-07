@@ -1,4 +1,5 @@
 // Fill out your copyright notice in the Description page of Project Settings.
+#pragma optimize( "", off )
 
 
 #include "HealthComponent.h"
@@ -41,3 +42,4 @@ void UHealthComponent::BeginPlay()
 }
 
 
+#pragma optimize( "", on )
