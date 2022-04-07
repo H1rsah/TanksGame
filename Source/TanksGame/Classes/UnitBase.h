@@ -29,6 +29,10 @@ public:
 	bool CanFire(FVector TargetLocation) const;
 	void Fire() const;
 
+	UFUNCTION(BlueprintPure, Category = "Turret")
+	ACannon* GetActiveCannon() const;
+	UFUNCTION(BlueprintCallable, Category = "Turret")
+	void SetupCannon(TSubclassOf<ACannon> NewCannon);
 	void SetAmmo(int32 Amount) const;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Targeting")

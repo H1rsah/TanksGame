@@ -3,6 +3,8 @@
 
 #include "PlayerTank.h"
 
+#include "Kismet/KismetMathLibrary.h"
+
 APlayerTank::APlayerTank()
 {
 	PrimaryActorTick.bCanEverTick = true;
@@ -26,62 +28,77 @@ void APlayerTank::BeginPlay()
 
 	TankController = Cast<APlayerTankController>(GetController());
 
-	SetupCannon(DefaultCannon);
+	SetupCannon(CannonType);
 }
 
 void APlayerTank::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-}
 
-void APlayerTank::SetupCannon(const TSubclassOf<ACannon> NewCannon)
-{
-	if (CurrentCannon)
+
+	// Tank movement
+	CurrentForwardAxisValue = FMath::Lerp(CurrentForwardAxisValue, TargetForwardAxisValue, MoveInterpolation);
+	FVector MoveVector = GetActorForwardVector() * CurrentForwardAxisValue;
+	SetActorLocation(GetActorLocation() + MoveVector * MoveSpeed * DeltaTime,true);
+	
+	// Tank rotation
+	CurrentRotationAxisValue = FMath::Lerp(CurrentRotationAxisValue, TargetRotationAxisValue, RotationInterpolation);
+	FRotator CurrentRotation = GetActorRotation();
+	CurrentRotation.Yaw += RotationSpeed * CurrentRotationAxisValue * DeltaTime;
+	SetActorRotation(CurrentRotation);
+	
+	// Turret rotation
+	if(TankController)
 	{
-		CurrentCannon->Destroy();
+		RotateTurretTo(TankController->GetShootTarget());
 	}
 
-	if (NewCannon)
-	{
-		FActorSpawnParameters Params;
-		Params.Instigator = this;
-		Params.Owner = this;
-		CurrentCannon = GetWorld()->SpawnActor<ACannon>(NewCannon, CannonSetupPoint->GetComponentTransform(), Params);
-		CurrentCannon->AttachToComponent(CannonSetupPoint, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
-	}
+	// Score
+	GEngine->AddOnScreenDebugMessage(-1, 0, FColor::Black, FString::Printf(TEXT("Score: %d"), TankController->PlayerScore));
 }
 
 void APlayerTank::MoveForward(float AxisValue)
 {
+	TargetForwardAxisValue = AxisValue;
 }
 
 void APlayerTank::RotateRight(float AxisValue)
 {
+	TargetRotationAxisValue = AxisValue;
 }
 
 void APlayerTank::RotateTurretTo(FVector TargetPosition) const
 {
+	FRotator TargetRotation = UKismetMathLibrary::FindLookAtRotation(TurretMesh->GetComponentLocation(), TargetPosition);
+	const FRotator CurrentRotation = TurretMesh->GetComponentRotation();
+	TargetRotation.Pitch = CurrentRotation.Pitch;
+	TargetRotation.Roll = CurrentRotation.Roll;
+	TurretMesh->SetWorldRotation(FMath::Lerp(CurrentRotation, TargetRotation, TurretRotationInterpolation));
 }
-//
-// void APlayerTank::Fire()
-// {
-// }
 
 void APlayerTank::FireSpecial()
 {
+	if(CurrentCannon)
+		CurrentCannon->FireSpecial();
 }
 
 void APlayerTank::SwitchCannon()
 {
-}
+	Swap(CurrentCannon, ReserveCannon);
+	if (CurrentCannon)
+	{
+		CurrentCannon->SetVisibility(true);
+	}
 
-ACannon* APlayerTank::GetActiveCannon() const
-{
-	return CurrentCannon;
+	if (ReserveCannon)
+	{
+		ReserveCannon->SetVisibility(false);
+	}
 }
 
 void APlayerTank::SetTurretTargetPosition(const FVector& Target)
 {
+	RotateTurretTo(Target);
 }
 
 FVector APlayerTank::GetTurretForwardVector() const

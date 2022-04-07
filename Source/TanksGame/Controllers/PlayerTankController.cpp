@@ -18,15 +18,15 @@ void APlayerTankController::SetupInputComponent()
 	bShowMouseCursor = true;
 }
 
-void APlayerTankController::Tick(float DeltaTime)
+void APlayerTankController::Tick(float DeltaSeconds)
 {
-	Super::Tick(DeltaTime);
+	Super::Tick(DeltaSeconds);
 
 	FVector MouseLocalPosition, MouseDirection;
 	DeprojectMousePositionToWorld(MouseLocalPosition, MouseDirection);
 	auto Z = FMath::Abs(PlayerTankPawn->GetActorLocation().Z - MouseLocalPosition.Z);
 	MousePosition = MouseLocalPosition - MouseDirection * Z /MouseDirection.Z;
-	// DrawDebugLine(GetWorld(), MouseLocalPosition, MouseLocalPosition + MouseDirection * 5000, FColor::Green, false, 0.1f, 0, 5);
+
 }
 
 void APlayerTankController::BeginPlay()

@@ -34,10 +34,13 @@ void AUnitBase::BeginPlay()
 {
 	Super::BeginPlay();
 
-	FActorSpawnParameters Params;
-	Params.Owner = this;
-	CurrentCannon = GetWorld()->SpawnActor<ACannon>(CannonClass, Params);
-	CurrentCannon->AttachToComponent(CannonSetupPoint, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+	if (CannonClass)
+	{
+		FActorSpawnParameters Params;
+		Params.Owner = this;
+		CurrentCannon = GetWorld()->SpawnActor<ACannon>(CannonClass, Params);
+		CurrentCannon->AttachToComponent(CannonSetupPoint, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+	}
 }
 
 // Called to bind functionality to input
@@ -80,6 +83,28 @@ void AUnitBase::Fire() const
 	if (CurrentCannon)
 	{
 		CurrentCannon->Fire();
+	}
+}
+
+ACannon* AUnitBase::GetActiveCannon() const
+{
+	return CurrentCannon;
+}
+
+void AUnitBase::SetupCannon(TSubclassOf<ACannon> NewCannon)
+{
+	if (CurrentCannon)
+	{
+		CurrentCannon->Destroy();
+	}
+
+	if (NewCannon)
+	{
+		FActorSpawnParameters Params;
+		Params.Instigator = this;
+		Params.Owner = this;
+		CurrentCannon = GetWorld()->SpawnActor<ACannon>(NewCannon, CannonSetupPoint->GetComponentTransform(), Params);
+		CurrentCannon->AttachToComponent(CannonSetupPoint, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
 	}
 }
 

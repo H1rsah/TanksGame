@@ -31,10 +31,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI|Move params")
 	float MovementAccuracy = 50.f;
 
-	UFUNCTION(BlueprintCallable, Category = "Turret")
-	void SetupCannon(TSubclassOf<ACannon> NewCannon);
-	UFUNCTION(BlueprintPure, Category = "Turret")
-	ACannon* GetActiveCannon() const;
 	UFUNCTION(BlueprintPure, Category = "AI|Move params")
 	float GetMovementAccuracy() const { return MovementAccuracy; }
 	UFUNCTION(BlueprintCallable, Category = "Movement")

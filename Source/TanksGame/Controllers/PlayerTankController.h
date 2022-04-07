@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/PlayerController.h"
 #include "TanksGame/Interfaaces/Targetable.h"
 #include "PlayerTankController.generated.h"
 
@@ -21,18 +20,18 @@ protected:
 	UPROPERTY()
 	APlayerTank* PlayerTankPawn;
 	FVector MousePosition;
+	
+	virtual void SetupInputComponent() override;
+	virtual void Tick(float DeltaSeconds) override;
+	virtual void BeginPlay() override;
 
 public:
-	// Called to bind functionality to input
-	virtual void SetupInputComponent() override;
-	virtual void Tick(float DeltaTime) override;
 	virtual FVector GetShootTarget() const override { return MousePosition; };
 
 	UPROPERTY()
 	int32 PlayerScore;
 
 private:
-	virtual void BeginPlay() override;
 	void MoveForward(float AxisValue);
 	void RotateRight(float AxisValue);
 	void Fire();

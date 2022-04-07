@@ -28,8 +28,6 @@ protected:
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
 	UCameraComponent* Camera;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Turret")
-	TSubclassOf<ACannon> DefaultCannon;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Turret|Cannon")
 	TSubclassOf<ACannon> CannonType;
 
@@ -48,22 +46,16 @@ protected:
 	APlayerTankController* TankController;
 
 public:
-	UFUNCTION(BlueprintCallable, Category = "Turret")
-	void SetupCannon(TSubclassOf<ACannon> NewCannon);
 	UFUNCTION(BlueprintCallable, Category = "Movement")
 	void MoveForward(float AxisValue);
 	UFUNCTION(BlueprintCallable, Category = "Movement")
 	void RotateRight(float AxisValue);
 	UFUNCTION(BlueprintCallable, Category = "Turret")
 	void RotateTurretTo(FVector TargetPosition) const;
-	// UFUNCTION(BlueprintCallable, Category = "Turret")
-	// void Fire();
 	UFUNCTION(BlueprintCallable, Category = "Turret")
 	void FireSpecial();
 	UFUNCTION(BlueprintCallable, Category = "Turret")
 	void SwitchCannon();
-	UFUNCTION(BlueprintPure, Category = "Turret")
-	ACannon* GetActiveCannon() const;
 	UFUNCTION(BlueprintCallable, Category = "Turret")
 	void SetTurretTargetPosition(const FVector& Target);
 	UFUNCTION(BlueprintPure, Category = "Turret")

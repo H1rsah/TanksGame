@@ -27,29 +27,6 @@ void AEnemyTank::Tick(float DeltaSeconds)
 	SetActorRotation(CurrentRotation);
 }
 
-void AEnemyTank::SetupCannon(TSubclassOf<ACannon> NewCannon)
-{
-	if (CurrentCannon)
-	{
-		CurrentCannon->Destroy();
-	}
-
-	if (NewCannon)
-	{
-		FActorSpawnParameters Params;
-		Params.Instigator = this;
-		Params.Owner = this;
-		CurrentCannon = GetWorld()->SpawnActor<ACannon>(NewCannon, CannonSetupPoint->GetComponentTransform(), Params);
-		CurrentCannon->AttachToComponent(CannonSetupPoint, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
-	}
-}
-
-ACannon* AEnemyTank::GetActiveCannon() const
-{
-	return CurrentCannon;
-}
-
-
 void AEnemyTank::MoveForward(float AxisValue)
 {
 	TargetForwardAxisValue = AxisValue;
