@@ -11,6 +11,7 @@ void APlayerTankController::SetupInputComponent()
 
 	InputComponent->BindAxis("MoveForward", this, &APlayerTankController::MoveForward);
 	InputComponent->BindAxis("RotateRight", this, &APlayerTankController::RotateRight);
+	InputComponent->BindAxis("TurretRotateRight", this, &APlayerTankController::TurretRotateRight);
 	InputComponent->BindAction("Fire", IE_Pressed, this, &APlayerTankController::Fire);
 	InputComponent->BindAction("FireSpecial", IE_Pressed, this, &APlayerTankController::FireSpecial);
 	InputComponent->BindAction("SwitchCannon",IE_Pressed, this, &APlayerTankController::SwitchCannon);
@@ -26,7 +27,6 @@ void APlayerTankController::Tick(float DeltaSeconds)
 	DeprojectMousePositionToWorld(MouseLocalPosition, MouseDirection);
 	auto Z = FMath::Abs(PlayerTankPawn->GetActorLocation().Z - MouseLocalPosition.Z);
 	MousePosition = MouseLocalPosition - MouseDirection * Z /MouseDirection.Z;
-
 }
 
 void APlayerTankController::BeginPlay()
@@ -46,6 +46,16 @@ void APlayerTankController::RotateRight(float AxisValue)
 {
 	if(PlayerTankPawn)
 		PlayerTankPawn->RotateRight(AxisValue);
+}
+
+void APlayerTankController::TurretRotateRight(float AxisValue)
+{
+	if(PlayerTankPawn)
+		if (FMath::IsNearlyZero(AxisValue))
+			bIsControllingFromMouse = true;
+		else
+			bIsControllingFromMouse = false;
+	PlayerTankPawn->TurretRotateRight(AxisValue);
 }
 
 void APlayerTankController::Fire()

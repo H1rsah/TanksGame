@@ -51,19 +51,22 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Movement")
 	void RotateRight(float AxisValue);
 	UFUNCTION(BlueprintCallable, Category = "Turret")
-	void RotateTurretTo(FVector TargetPosition) const;
+	void TurretRotateRight(float AxisValue);
+	UFUNCTION(BlueprintCallable, Category = "Turret")
+	void RotateTurret();
 	UFUNCTION(BlueprintCallable, Category = "Turret")
 	void FireSpecial();
 	UFUNCTION(BlueprintCallable, Category = "Turret")
 	void SwitchCannon();
 	UFUNCTION(BlueprintCallable, Category = "Turret")
-	void SetTurretTargetPosition(const FVector& Target);
+	void SetTurretTargetPosition();
 	UFUNCTION(BlueprintPure, Category = "Turret")
 	FVector GetTurretForwardVector() const;
 
 private:
-	float TargetForwardAxisValue, CurrentForwardAxisValue;
-	float TargetRotationAxisValue, CurrentRotationAxisValue;
+	float TargetForwardAxisValue = 0.f, CurrentForwardAxisValue;
+	float TargetRotationAxisValue = 0.f, CurrentRotationAxisValue;
+	float TurretRotationAxisValue = 0.f, CurrentTurretRotationAxisValue;
 	int32 DestructionScore = 1;
 
 	UPROPERTY()

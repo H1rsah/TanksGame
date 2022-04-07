@@ -2,9 +2,8 @@
 
 
 #include "Projectile.h"
-
-
-#include "TankPawn.h"
+#include "Components/AudioComponent.h"
+#include "TanksGame/Interfaaces/Damageable.h"
 
 
 // Sets default values

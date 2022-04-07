@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "TankPawn.h"
 #include "Cannon.h"
 #include "AmmoBox.generated.h"
 

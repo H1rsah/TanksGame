@@ -50,7 +50,17 @@ void APlayerTank::Tick(float DeltaTime)
 	// Turret rotation
 	if(TankController)
 	{
-		RotateTurretTo(TankController->GetShootTarget());
+		if (TankController->bIsControllingFromMouse)
+		{
+			RotateTurret();
+		}
+		else
+		{
+			CurrentTurretRotationAxisValue = FMath::Lerp(CurrentTurretRotationAxisValue, TurretRotationAxisValue, TurretRotationInterpolation);
+			FRotator CurrentTurretRotation = TurretMesh->GetComponentRotation();
+			CurrentTurretRotation.Yaw += RotationSpeed * CurrentTurretRotationAxisValue * DeltaTime;
+			TurretMesh->SetWorldRotation(CurrentTurretRotation);
+		}
 	}
 
 	// Score
@@ -67,10 +77,16 @@ void APlayerTank::RotateRight(float AxisValue)
 	TargetRotationAxisValue = AxisValue;
 }
 
-void APlayerTank::RotateTurretTo(FVector TargetPosition) const
+void APlayerTank::TurretRotateRight(float AxisValue)
 {
-	FRotator TargetRotation = UKismetMathLibrary::FindLookAtRotation(TurretMesh->GetComponentLocation(), TargetPosition);
+	TurretRotationAxisValue = AxisValue;
+}
+
+void APlayerTank::RotateTurret()
+{
+	const FVector TargetPosition = TankController->GetShootTarget();
 	const FRotator CurrentRotation = TurretMesh->GetComponentRotation();
+	FRotator TargetRotation = UKismetMathLibrary::FindLookAtRotation(TurretMesh->GetComponentLocation(), TargetPosition);
 	TargetRotation.Pitch = CurrentRotation.Pitch;
 	TargetRotation.Roll = CurrentRotation.Roll;
 	TurretMesh->SetWorldRotation(FMath::Lerp(CurrentRotation, TargetRotation, TurretRotationInterpolation));
@@ -96,9 +112,9 @@ void APlayerTank::SwitchCannon()
 	}
 }
 
-void APlayerTank::SetTurretTargetPosition(const FVector& Target)
+void APlayerTank::SetTurretTargetPosition()
 {
-	RotateTurretTo(Target);
+	RotateTurret();
 }
 
 FVector APlayerTank::GetTurretForwardVector() const

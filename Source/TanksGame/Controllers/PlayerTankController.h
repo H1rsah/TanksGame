@@ -30,10 +30,12 @@ public:
 
 	UPROPERTY()
 	int32 PlayerScore;
+	bool bIsControllingFromMouse = true;
 
 private:
 	void MoveForward(float AxisValue);
 	void RotateRight(float AxisValue);
+	void TurretRotateRight(float AxisValue);
 	void Fire();
 	void FireSpecial();
 	void SwitchCannon();
