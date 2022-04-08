@@ -30,7 +30,7 @@ public:
 	FOnDie OnDie;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
-	float MaxHealth = 20.f;
+	float MaxHealth = 10.f;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	float CurrentHealth;
 	

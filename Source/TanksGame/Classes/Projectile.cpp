@@ -1,5 +1,5 @@
 // Fill out your copyright notice in the Description page of Project Settings.
-
+#pragma optimize( "", off )
 
 #include "Projectile.h"
 #include "Components/AudioComponent.h"
@@ -88,4 +88,4 @@ void AProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimi
 	Stop();
 }
 
-
+#pragma optimize( "", on )

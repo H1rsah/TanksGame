@@ -1,10 +1,12 @@
 // Fill out your copyright notice in the Description page of Project Settings.
-
+#pragma optimize( "", off )
 
 #include "TurretAIController.h"
+#include "DrawDebugHelpers.h"
 #include "EnemyTower.h"
 #include "WaypointActor.h"
 #include "Kismet/GameplayStatics.h"
+#include "Kismet/KismetSystemLibrary.h"
 
 
 void ATurretAIController::OnPossess(APawn* InPawn)
@@ -51,7 +53,23 @@ void ATurretAIController::GetClosestTarget()
 		Params.bReturnPhysicalMaterial = false;
 		Params.AddIgnoredActor(MyPawn);
 		Params.bTraceComplex = true;
-		GetWorld()->LineTraceSingleByChannel(Hit, MyPawn->GetActorLocation(), TmpActor->GetActorLocation(), ECollisionChannel::ECC_Visibility, Params);
+		// TArray<AActor*> ActorsToIgnore = {MyPawn};
+		bool bWeHitSomething = UKismetSystemLibrary::LineTraceSingle(this,
+			MyPawn->GetCannonLocation(), TmpActor->GetActorLocation(),
+			UEngineTypes::ConvertToTraceType(ECC_Pawn),
+			false,
+			{MyPawn},
+			EDrawDebugTrace::ForDuration,
+			Hit,
+			true,
+			FLinearColor::Black,
+			FLinearColor::Green,
+			0.f);
+		// if (bWeHitSomething)
+		// 	GEngine->AddOnScreenDebugMessage(-1, 0, FColor::Black,FString::Printf(TEXT("Hit: %s"), *Hit.Actor->GetName()));
+		// else
+		// 	GEngine->AddOnScreenDebugMessage(-1, 0, FColor::Yellow,"No Fish!");
+		
 		if (Hit.Actor == TmpActor)
 			MyTarget = Cast<AUnitBase>(TmpActor);
 		else
@@ -65,7 +83,7 @@ void ATurretAIController::GetClosestTarget()
 
 void ATurretAIController::Aiming() const
 {
-	// DrawDebugLine(GetWorld(), MyPawn->GetActorLocation(), MyTarget->GetActorLocation(), FColor::Yellow, false, -1, 0, 5);
+	// DrawDebugLine(GetWorld(), MyPawn->GetActorLocation(), MyTarget->GetActorLocation(), FColor::Yellow, false, -1, 0, 3);
 	// GEngine->AddOnScreenDebugMessage(-1, 0, FColor::Yellow,"Aiming!");
 
 	MyPawn->RotateTurretToTarget(MyTarget->GetActorLocation(), true);
@@ -75,3 +93,5 @@ void ATurretAIController::Aiming() const
 		MyPawn->Fire();
 	}
 }
+
+#pragma optimize( "", on )

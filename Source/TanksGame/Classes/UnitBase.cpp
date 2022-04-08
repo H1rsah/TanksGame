@@ -1,6 +1,4 @@
 // Fill out your copyright notice in the Description page of Project Settings.
-#pragma optimize( "", off )
-
 
 #include "UnitBase.h"
 
@@ -43,7 +41,6 @@ void AUnitBase::BeginPlay()
 	}
 }
 
-// Called to bind functionality to input
 void AUnitBase::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
@@ -59,14 +56,15 @@ void AUnitBase::Destroyed()
 
 void AUnitBase::RotateTurretToTarget(const FVector TargetLocation, const bool bIsRollRequired) const
 {
-	FRotator TargetRotation = UKismetMathLibrary::FindLookAtRotation(TurretMesh->GetComponentLocation(), TargetLocation);
+	FRotator TargetRotation = UKismetMathLibrary::FindLookAtRotation(CannonSetupPoint->GetComponentLocation(), TargetLocation);
 	if (bIsRollRequired)
 		TargetRotation.Roll = 90.f;
 
 	const FRotator TurretRotation = TurretMesh->GetComponentRotation();
-	// GEngine->AddOnScreenDebugMessage(-1, 0, FColor::Black, FString::Printf(TEXT("TargetRotation: (%f; %f; %f)   TurretRotation(): (%f; %f; %f)"), TargetRotation.Roll, TargetRotation.Pitch, TargetRotation.Yaw, TurretRotation.Roll, TurretRotation.Pitch, TurretRotation.Yaw));
 
 	TurretMesh->SetWorldRotation(FMath::Lerp(TurretRotation, TargetRotation, TargetingSpeed));
+	
+	// GEngine->AddOnScreenDebugMessage(-1, 0, FColor::Black, FString::Printf(TEXT("TargetLocation: (%f; %f; %f)    TargetRotation: (%f; %f; %f)   TurretRotation(): (%f; %f; %f)"), TargetLocation.X, TargetLocation.Y, TargetLocation.Z, TargetRotation.Roll, TargetRotation.Pitch, TargetRotation.Yaw, TurretRotation.Roll, TurretRotation.Pitch, TurretRotation.Yaw));
 }
 
 bool AUnitBase::CanFire(const FVector TargetLocation) const
@@ -137,5 +135,3 @@ int32 AUnitBase::GetScores() const
 {
 	return DestructionScore;
 }
-
-#pragma optimize( "", on )

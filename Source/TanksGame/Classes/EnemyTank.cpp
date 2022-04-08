@@ -10,6 +10,12 @@ AEnemyTank::AEnemyTank()
 	Mobility = EUnitMobility::Mobile;
 }
 
+void AEnemyTank::OnConstruction(const FTransform& Transform)
+{
+	Super::OnConstruction(Transform);
+	
+}
+
 void AEnemyTank::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
@@ -26,6 +32,7 @@ void AEnemyTank::Tick(float DeltaSeconds)
 	CurrentRotation.Yaw += RotationSpeed * CurrentRotationAxisValue * DeltaSeconds;
 	SetActorRotation(CurrentRotation);
 }
+
 
 void AEnemyTank::MoveForward(float AxisValue)
 {

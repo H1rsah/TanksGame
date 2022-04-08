@@ -101,7 +101,7 @@ void APlayerTank::TurretRotateRight(float AxisValue)
 
 void APlayerTank::RotateTurret()
 {
-	const FVector TargetPosition = TankController->GetShootTarget();
+	const FVector TargetPosition = TankController->GetShootVector();
 	const FRotator CurrentRotation = TurretMesh->GetComponentRotation();
 	FRotator TargetRotation = UKismetMathLibrary::FindLookAtRotation(TurretMesh->GetComponentLocation(), TargetPosition);
 	TargetRotation.Pitch = CurrentRotation.Pitch;

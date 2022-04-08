@@ -44,14 +44,16 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Targeting", meta = (EditCondition = "Mobility == EUnitMobility::Mobile", EditConditionHides))
 	FName WaypointTag = "Default";
 	
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Components")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Effects")
 	UParticleSystem* DieParticle;
-
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Effects")
 	UForceFeedbackEffect* HitForceEffect;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Effects")
 	TSubclassOf<UCameraShakeBase> HitShake;
-	
+
+	FVector GetCannonLocation() const { return CannonSetupPoint->GetComponentLocation(); }
+	FVector GetTurretLocation() const { return TurretMesh->GetComponentLocation(); }
+
 protected:
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
 	UBoxComponent* HitBox;

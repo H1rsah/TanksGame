@@ -15,6 +15,7 @@ class TANKSGAME_API AEnemyTank : public AUnitBase
 	GENERATED_BODY()
 
 	AEnemyTank();
+	virtual void OnConstruction(const FTransform& Transform) override;
 	virtual void Tick(float DeltaSeconds) override;
 
 	float TargetForwardAxisValue, CurrentForwardAxisValue;

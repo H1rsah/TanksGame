@@ -94,12 +94,11 @@ void ATankAIController::GeneratePatrollingPoints()
 		TmpPoint.Z = MyPawn->GetActorLocation().Z;
 		PatrollingPoints.Add(TmpPoint);
 	}
-
-	for (int id = 1; id < PatrollingPoints.Num(); id++)
-	{
-		DrawDebugLine(GetWorld(), PatrollingPoints[id-1], PatrollingPoints[id], FColor::Yellow, true);
-	}
-	DrawDebugLine(GetWorld(), PatrollingPoints[0], PatrollingPoints[PatrollingPoints.Num() - 1], FColor::Yellow, true);
+	// for (int id = 1; id < PatrollingPoints.Num(); id++)
+	// {
+	// 	DrawDebugLine(GetWorld(), PatrollingPoints[id-1], PatrollingPoints[id], FColor::Yellow, true);
+	// }
+	// DrawDebugLine(GetWorld(), PatrollingPoints[0], PatrollingPoints[PatrollingPoints.Num() - 1], FColor::Yellow, true);
 }
 
 void ATankAIController::Aiming() const

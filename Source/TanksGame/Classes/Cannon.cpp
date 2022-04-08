@@ -141,9 +141,11 @@ void ACannon::Shot()
         FHitResult Hit;
         FVector TraceStart = ProjectileSpawnPoint->GetComponentLocation();
         FVector TraceEnd = ProjectileSpawnPoint->GetComponentLocation() + ProjectileSpawnPoint->GetForwardVector() * FireRange;
-        FCollisionQueryParams TraceParams = FCollisionQueryParams (FName(TEXT("FireTrace")), true, this);
-        TraceParams.bReturnPhysicalMaterial = false;
-		if (GetWorld()->LineTraceSingleByChannel(Hit, TraceStart, TraceEnd, ECC_Visibility, TraceParams))
+		FCollisionQueryParams TraceParams;
+		TraceParams.bReturnPhysicalMaterial = false;
+		TraceParams.AddIgnoredActor(GetOwner());
+		TraceParams.bTraceComplex = true;
+		if (GetWorld()->LineTraceSingleByChannel(Hit, TraceStart, TraceEnd, ECC_Pawn, TraceParams))
 		{
 			DrawDebugLine(GetWorld(), TraceStart, Hit.Location, FColor::Red, false, 0.5f, 0, 5.f);
 			if (Hit.Actor.IsValid() && Hit.Component.IsValid(), Hit.Component->GetCollisionObjectType() == ECC_Destructible)

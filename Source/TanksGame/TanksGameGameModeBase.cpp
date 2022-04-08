@@ -9,10 +9,10 @@ void ATanksGameGameModeBase::NotifyActorWasDestroyedByDamage(AActor* Actor, cons
 {
 	if (IScoreable* Scoreable = Cast<IScoreable>(Actor))
 	{
-		APlayerTankController* PlayerController = Cast<APlayerTankController>(GetWorld()->GetFirstPlayerController());
-		if (DamageType.Instigator == PlayerController->GetPawn())
-		{
-			PlayerController->PlayerScore += Scoreable->GetScores();
-		}
+		if (APlayerTankController* PlayerController = Cast<APlayerTankController>(GetWorld()->GetFirstPlayerController()))
+			if (DamageType.Instigator == PlayerController->GetPawn())
+			{
+				PlayerController->PlayerScore += Scoreable->GetScores();
+			}
 	}
 }

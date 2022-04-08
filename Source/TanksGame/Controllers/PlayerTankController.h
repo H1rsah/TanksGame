@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "TanksGame/Interfaaces/Targetable.h"
 #include "PlayerTankController.generated.h"
 
 
@@ -12,7 +11,7 @@ class APlayerTank;
  * 
  */
 UCLASS()
-class TANKSGAME_API APlayerTankController : public APlayerController, public ITargetable
+class TANKSGAME_API APlayerTankController : public APlayerController
 {
 	GENERATED_BODY()
 	
@@ -26,7 +25,7 @@ protected:
 	virtual void BeginPlay() override;
 
 public:
-	virtual FVector GetShootTarget() const override { return MousePosition; };
+	FVector GetShootVector() const { return MousePosition; };
 
 	UPROPERTY()
 	int32 PlayerScore;

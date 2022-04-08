@@ -1,6 +1,4 @@
 // Fill out your copyright notice in the Description page of Project Settings.
-#pragma optimize( "", off )
-
 
 #include "HealthComponent.h"
 #include "TanksGame/TanksGameGameModeBase.h"
@@ -40,6 +38,3 @@ void UHealthComponent::BeginPlay()
 
 	CurrentHealth = MaxHealth;
 }
-
-
-#pragma optimize( "", on )
