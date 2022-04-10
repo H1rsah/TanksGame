@@ -72,8 +72,8 @@ protected:
 	UWidgetComponent* WidgetHealthBar;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Components")
 	bool bShowHealthWidgetInGame = true;
-	// UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
-	// UWidgetComponent* WidgetObtainedDamage;
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
+	UWidgetComponent* WidgetObtainedDamage;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Targeting")
 	float Accuracy = 5.f;
@@ -97,7 +97,4 @@ protected:
 
 	UPROPERTY()
 	ACannon* CurrentCannon = nullptr;
-
-private:
-	UObtainedDamageWidget* ObtainedDamage;
 };

@@ -11,7 +11,7 @@
 /**
  * 
  */
-UCLASS(Abstract)
+UCLASS(Abstract, ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class TANKSGAME_API UHealthBarWidget : public UUserWidget
 {
 	GENERATED_BODY()

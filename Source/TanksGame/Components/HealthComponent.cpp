@@ -4,11 +4,8 @@
 #include "TanksGame/TanksGameGameModeBase.h"
 
 
-// Sets default values for this component's properties
 UHealthComponent::UHealthComponent()
 {
-	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
-	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = false;
 
 	// ...
@@ -16,7 +13,6 @@ UHealthComponent::UHealthComponent()
 
 void UHealthComponent::TakeDamage(FDamageTypes DamageType)
 {
-	// float PrevValue = CurrentHealth;
 	CurrentHealth -= DamageType.DamageValue;
 
 	if(CurrentHealth <= 0.f)
@@ -29,9 +25,11 @@ void UHealthComponent::TakeDamage(FDamageTypes DamageType)
 	else
 		if(OnHealthChanged.IsBound())
 			OnHealthChanged.Broadcast(DamageType.DamageValue);
+	
+	OnObtainDamage.Broadcast();
+	GEngine->AddOnScreenDebugMessage(-1, 0.2, FColor::Red, FString::Printf(TEXT("Health (%f)"), CurrentHealth));
 }
 
-// Called when the game starts
 void UHealthComponent::BeginPlay()
 {
 	Super::BeginPlay();

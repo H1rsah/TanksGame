@@ -17,15 +17,18 @@ class TANKSGAME_API UObtainedDamageWidget : public UUserWidget
 {
 	GENERATED_BODY()
 
-	TArray<FDamageTypes> ObtainedDamageQueue;
+	// TArray<FDamageTypes> ObtainedDamageQueue;
 	
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
 	UOverlay* ObtainedDamageOverlay;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float DamageAmount;
 	
 public:
+	void ObtainDamage(float Damage);
 	UFUNCTION(BlueprintImplementableEvent)
-	void ShowObtainedDamage(float Damage);
+	void ShowObtainedDamage();
 	UFUNCTION(BlueprintCallable)
 	void OnObtainedMessageEnd();
 };

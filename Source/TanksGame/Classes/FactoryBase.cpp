@@ -79,8 +79,14 @@ void AFactoryBase::OnDie_Implementation()
 	GetWorldTimerManager().ClearTimer(SpawnTimerHandle);
 
 	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), DieParticle, GetActorLocation(), FRotator::ZeroRotator, FVector(10), true, EPSCPoolMethod::None, true);
-	Destroy();
 
+	if (RuinsMesh)
+	{
+		BuildingMesh->SetStaticMesh(RuinsMesh);
+		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), RuinsParticle, GetActorLocation(), FRotator::ZeroRotator, FVector(10), false, EPSCPoolMethod::None, true);
+	}
+	else
+		Destroy();
 }
 
 void AFactoryBase::OnHealthChanged_Implementation(float Damage)

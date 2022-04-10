@@ -24,21 +24,17 @@ AUnitBase::AUnitBase()
 	WidgetHealthBar = CreateDefaultSubobject<UWidgetComponent>("Health Bar");
 	WidgetHealthBar->SetupAttachment(RootComponent);
 	
-	// WidgetObtainedDamage = CreateDefaultSubobject<UWidgetComponent>("Obtained Damage");
-	// WidgetObtainedDamage->SetupAttachment(RootComponent);
+	WidgetObtainedDamage = CreateDefaultSubobject<UWidgetComponent>("Obtained Damage");
+	WidgetObtainedDamage->SetupAttachment(RootComponent);
 
 	HealthComponent = CreateDefaultSubobject<UHealthComponent>(TEXT("Health component"));
 	HealthComponent->OnHealthChanged.AddDynamic(this, &AUnitBase::OnHealthChanged);
 	HealthComponent->OnDie.AddDynamic(this, &AUnitBase::OnDie);
-
-	AutoPossessAI();
 }
 
 void AUnitBase::BeginPlay()
 {
 	Super::BeginPlay();
-
-	// ObtainedDamage = Cast<UObtainedDamageWidget>(WidgetObtainedDamage->GetUserWidgetObject());
 	
 	if (UHealthBarWidget* Health = Cast<UHealthBarWidget>(WidgetHealthBar->GetUserWidgetObject()))
 	{
@@ -137,7 +133,6 @@ void AUnitBase::OnDie_Implementation()
 
 void AUnitBase::OnHealthChanged_Implementation(float Damage)
 {
-	// ObtainedDamage->ShowObtainedDamage(Damage);
 	// GEngine->AddOnScreenDebugMessage(123, 2, FColor::Red, FString::Printf(TEXT("TURRET Health: %f; Damage: %f"), HealthComponent->CurrentHealth, Damage));
 }
 

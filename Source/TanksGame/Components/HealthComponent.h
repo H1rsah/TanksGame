@@ -8,6 +8,7 @@
 #include "HealthComponent.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnDie);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnObtainDamage);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnHealthChanged, float, Damage);
 
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
@@ -28,6 +29,8 @@ public:
 	FOnHealthChanged OnHealthChanged;
 	UPROPERTY(BlueprintAssignable)
 	FOnDie OnDie;
+	UPROPERTY(BlueprintAssignable)
+	FOnObtainDamage OnObtainDamage;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	float MaxHealth = 10.f;
