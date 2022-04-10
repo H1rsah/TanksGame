@@ -2,6 +2,7 @@
 
 
 #include "EnemyTank.h"
+#include "Blueprint/UserWidget.h"
 
 AEnemyTank::AEnemyTank()
 {

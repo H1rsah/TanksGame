@@ -7,9 +7,12 @@
 #include "Cannon.h"
 #include "Components/ArrowComponent.h"
 #include "Components/BoxComponent.h"
+#include "Components/WidgetComponent.h"
 #include "TanksGame/Components/HealthComponent.h"
 #include "TanksGame/Interfaaces/Damageable.h"
 #include "TanksGame/Interfaaces/Scoreable.h"
+#include "TanksGame/Widgets/HealthBarWidget.h"
+#include "TanksGame/Widgets/ObtainedDamageWidget.h"
 #include "UnitBase.generated.h"
 
 UCLASS()
@@ -65,7 +68,13 @@ protected:
     UArrowComponent* CannonSetupPoint;
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
     UHealthComponent* HealthComponent;
-
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
+	UWidgetComponent* WidgetHealthBar;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Components")
+	bool bShowHealthWidgetInGame = true;
+	// UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
+	// UWidgetComponent* WidgetObtainedDamage;
+	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Targeting")
 	float Accuracy = 5.f;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Targeting")
@@ -88,4 +97,7 @@ protected:
 
 	UPROPERTY()
 	ACannon* CurrentCannon = nullptr;
+
+private:
+	UObtainedDamageWidget* ObtainedDamage;
 };

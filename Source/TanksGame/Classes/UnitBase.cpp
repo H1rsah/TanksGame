@@ -1,7 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "UnitBase.h"
-
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
 
@@ -21,17 +20,32 @@ AUnitBase::AUnitBase()
 
 	CannonSetupPoint = CreateDefaultSubobject<UArrowComponent>("Cannon Setup Point");
 	CannonSetupPoint->SetupAttachment(TurretMesh);
+	
+	WidgetHealthBar = CreateDefaultSubobject<UWidgetComponent>("Health Bar");
+	WidgetHealthBar->SetupAttachment(RootComponent);
+	
+	// WidgetObtainedDamage = CreateDefaultSubobject<UWidgetComponent>("Obtained Damage");
+	// WidgetObtainedDamage->SetupAttachment(RootComponent);
 
 	HealthComponent = CreateDefaultSubobject<UHealthComponent>(TEXT("Health component"));
-	
 	HealthComponent->OnHealthChanged.AddDynamic(this, &AUnitBase::OnHealthChanged);
 	HealthComponent->OnDie.AddDynamic(this, &AUnitBase::OnDie);
+
+	AutoPossessAI();
 }
 
 void AUnitBase::BeginPlay()
 {
 	Super::BeginPlay();
 
+	// ObtainedDamage = Cast<UObtainedDamageWidget>(WidgetObtainedDamage->GetUserWidgetObject());
+	
+	if (UHealthBarWidget* Health = Cast<UHealthBarWidget>(WidgetHealthBar->GetUserWidgetObject()))
+	{
+		Health->SetOwnerUnit(HealthComponent);
+		WidgetHealthBar->SetVisibility(bShowHealthWidgetInGame);
+	}
+	
 	if (CannonClass)
 	{
 		FActorSpawnParameters Params;
@@ -123,6 +137,7 @@ void AUnitBase::OnDie_Implementation()
 
 void AUnitBase::OnHealthChanged_Implementation(float Damage)
 {
+	// ObtainedDamage->ShowObtainedDamage(Damage);
 	// GEngine->AddOnScreenDebugMessage(123, 2, FColor::Red, FString::Printf(TEXT("TURRET Health: %f; Damage: %f"), HealthComponent->CurrentHealth, Damage));
 }
 

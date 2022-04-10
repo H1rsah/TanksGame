@@ -31,6 +31,8 @@ public:
 	int32 PlayerScore;
 	bool bIsControllingFromMouse = true;
 
+	
+
 private:
 	void MoveForward(float AxisValue);
 	void RotateRight(float AxisValue);
