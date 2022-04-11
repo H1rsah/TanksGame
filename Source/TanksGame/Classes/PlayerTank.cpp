@@ -63,8 +63,7 @@ void APlayerTank::Tick(float DeltaTime)
 		}
 	}
 
-	// Score
-	GEngine->AddOnScreenDebugMessage(-1, 0, FColor::Black, FString::Printf(TEXT("Score: %d"), TankController->PlayerScore));
+	// GEngine->AddOnScreenDebugMessage(-1, 0, FColor::Black, FString::Printf(TEXT("Score: %d"), TankController->PlayerScore));
 }
 
 void APlayerTank::TakeDamage(const FDamageTypes& DamageType)
@@ -117,6 +116,7 @@ void APlayerTank::FireSpecial()
 
 void APlayerTank::SwitchCannon()
 {
+	bIsPrimaryCannon = !bIsPrimaryCannon;
 	Swap(CurrentCannon, ReserveCannon);
 	if (CurrentCannon)
 	{

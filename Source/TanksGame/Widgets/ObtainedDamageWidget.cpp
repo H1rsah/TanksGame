@@ -4,14 +4,14 @@
 #include "ObtainedDamageWidget.h"
 
 
-void UObtainedDamageWidget::ObtainDamage(float Damage)
-{
-	DamageAmount = Damage;
-	ShowObtainedDamage();
-}
-
-void UObtainedDamageWidget::OnObtainedMessageEnd()
-{
-	// ObtainedDamageQueue.RemoveAt(0);
-	ObtainedDamageOverlay->RemoveChildAt(0);
-}
+// void UObtainedDamageWidget::ObtainDamage(float Damage)
+// {
+// 	DamageAmount = Damage;
+// 	ShowObtainedDamage();
+// }
+//
+// void UObtainedDamageWidget::OnObtainedMessageEnd()
+// {
+// 	// ObtainedDamageQueue.RemoveAt(0);
+// 	ObtainedDamageOverlay->RemoveChildAt(0);
+// }

@@ -35,7 +35,7 @@ void ACannon::BeginPlay()
 	Super::BeginPlay();
 	
 	BurstShotsLeft = 0;
-	AmmoAmount = MaxAmmo;
+	CurrentAmmo = MaxAmmo;
 	bIsReadyToFire = true;
 }
 
@@ -59,7 +59,7 @@ void ACannon::Fire()
 		return;
 	
 	bIsReadyToFire = false;
-	--AmmoAmount;
+	--CurrentAmmo;
 	BurstShotsLeft = 1;
 	Shot();
 }
@@ -70,7 +70,7 @@ void ACannon::FireSpecial()
 		return;
 
 	bIsReadyToFire = false;
-	--AmmoAmount;
+	--CurrentAmmo;
 	BurstShotsLeft = BurstShotsAmount;
 
 	Shot();
@@ -78,7 +78,7 @@ void ACannon::FireSpecial()
 
 bool ACannon::IsReadyToFire() const
 {
-    return bIsReadyToFire && AmmoAmount > 0 && BurstShotsLeft == 0;
+    return bIsReadyToFire && CurrentAmmo > 0 && BurstShotsLeft == 0;
 }
 
 bool ACannon::HasSpecialFire() const
@@ -88,7 +88,7 @@ bool ACannon::HasSpecialFire() const
 
 void ACannon::AddAmmo(const int32 Value)
 {
-	AmmoAmount = FMath::Clamp(AmmoAmount + Value, 0, MaxAmmo);
+	CurrentAmmo = FMath::Clamp(CurrentAmmo + Value, 0, MaxAmmo);
 }
 
 void ACannon::SetVisibility(bool bIsVisible) const

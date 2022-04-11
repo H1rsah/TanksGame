@@ -131,7 +131,7 @@ void ATankAIController::MoveToNextPoint(float DeltaTime)
 	FVector ForwardDirection = MyPawn->GetActorForwardVector();
 	FVector RightDirection = MyPawn->GetActorRightVector();
 	       
-	DrawDebugLine(GetWorld(), PawnLocation, CurrentPoint, FColor::Green, false, 0, 0, 10);
+	// DrawDebugLine(GetWorld(), PawnLocation, CurrentPoint, FColor::Green, false, 0, 0, 10);
 	   
 	float ForwardAngle = FMath::RadiansToDegrees(FMath::Acos(FVector::DotProduct(ForwardDirection, MoveDirection)));
 	float RightAngle = FMath::RadiansToDegrees(FMath::Acos(FVector::DotProduct(RightDirection, MoveDirection)));

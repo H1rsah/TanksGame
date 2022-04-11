@@ -32,7 +32,7 @@ public:
 	UPROPERTY(BlueprintAssignable)
 	FOnObtainDamage OnObtainDamage;
 	
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float MaxHealth = 10.f;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	float CurrentHealth;

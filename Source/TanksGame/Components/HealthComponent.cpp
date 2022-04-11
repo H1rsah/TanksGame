@@ -27,7 +27,7 @@ void UHealthComponent::TakeDamage(FDamageTypes DamageType)
 			OnHealthChanged.Broadcast(DamageType.DamageValue);
 	
 	OnObtainDamage.Broadcast();
-	GEngine->AddOnScreenDebugMessage(-1, 0.2, FColor::Red, FString::Printf(TEXT("Health (%f)"), CurrentHealth));
+	// GEngine->AddOnScreenDebugMessage(-1, 0.2, FColor::Red, FString::Printf(TEXT("Health (%f)"), CurrentHealth));
 }
 
 void UHealthComponent::BeginPlay()

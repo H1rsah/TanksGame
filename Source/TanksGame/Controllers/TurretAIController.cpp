@@ -59,12 +59,12 @@ void ATurretAIController::GetClosestTarget()
 			UEngineTypes::ConvertToTraceType(ECC_Pawn),
 			false,
 			{MyPawn},
-			EDrawDebugTrace::ForDuration,
+			EDrawDebugTrace::None,
 			Hit,
 			true,
-			FLinearColor::Black,
 			FLinearColor::Green,
-			0.f);
+			FLinearColor::Red,
+			0);
 		// if (bWeHitSomething)
 		// 	GEngine->AddOnScreenDebugMessage(-1, 0, FColor::Black,FString::Printf(TEXT("Hit: %s"), *Hit.Actor->GetName()));
 		// else

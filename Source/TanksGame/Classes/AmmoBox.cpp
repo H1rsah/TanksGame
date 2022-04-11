@@ -33,6 +33,7 @@ void AAmmoBox::OnMeshOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* O
 		else
 		{
 			Tank->SetupCannon(CannonClass);
+			Tank->SetAmmo(AmmoAmount);
 		}
 
 		if(!bIsInfiniteAmmo)

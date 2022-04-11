@@ -97,4 +97,7 @@ protected:
 
 	UPROPERTY()
 	ACannon* CurrentCannon = nullptr;
+
+	UPROPERTY()
+	UObtainedDamageWidget* ObtainedDamage;
 };

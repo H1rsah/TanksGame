@@ -75,7 +75,9 @@ void AProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimi
 	{
 		OtherActor->Destroy();
 	}
-	else if (IDamageable* Damageable = Cast<IDamageable>(OtherActor))
+	
+	IDamageable* Damageable = Cast<IDamageable>(OtherActor);
+	if (Damageable && GetOwner() != OtherActor)
 	{
 		FDamageTypes DamageType;
 		DamageType.DamageValue = Damage;

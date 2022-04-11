@@ -27,7 +27,7 @@ protected:
 public:
 	FVector GetShootVector() const { return MousePosition; };
 
-	UPROPERTY()
+	UPROPERTY(BlueprintReadOnly)
 	int32 PlayerScore;
 	bool bIsControllingFromMouse = true;
 

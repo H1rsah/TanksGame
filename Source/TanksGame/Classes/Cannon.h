@@ -80,7 +80,8 @@ protected:
 	
 	void Reload();
 	void Shot();
-	
-	int32 AmmoAmount = 0;
+
+	UPROPERTY(BlueprintReadOnly)
+	int32 CurrentAmmo = 0;
 	int32 BurstShotsLeft = 0;
 };

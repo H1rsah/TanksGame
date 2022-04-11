@@ -35,6 +35,8 @@ AUnitBase::AUnitBase()
 void AUnitBase::BeginPlay()
 {
 	Super::BeginPlay();
+
+	ObtainedDamage = Cast<UObtainedDamageWidget>(WidgetObtainedDamage->GetUserWidgetObject());
 	
 	if (UHealthBarWidget* Health = Cast<UHealthBarWidget>(WidgetHealthBar->GetUserWidgetObject()))
 	{
@@ -48,6 +50,8 @@ void AUnitBase::BeginPlay()
 		Params.Owner = this;
 		CurrentCannon = GetWorld()->SpawnActor<ACannon>(CannonClass, Params);
 		CurrentCannon->AttachToComponent(CannonSetupPoint, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+		CurrentCannon->MaxAmmo = 10;
+		
 	}
 }
 
@@ -139,6 +143,12 @@ void AUnitBase::OnHealthChanged_Implementation(float Damage)
 void AUnitBase::TakeDamage(const FDamageTypes& DamageData)
 {
 	HealthComponent->TakeDamage(DamageData);
+	
+	if (ObtainedDamage)
+	{
+		ObtainedDamage->DamageAmount = DamageData.DamageValue;
+		ObtainedDamage->Refresh();
+	}
 }
 
 int32 AUnitBase::GetScores() const

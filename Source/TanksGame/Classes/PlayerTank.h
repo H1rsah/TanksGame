@@ -45,6 +45,8 @@ protected:
 
 	UPROPERTY()
 	APlayerTankController* TankController;
+	UPROPERTY(BlueprintReadOnly)
+	bool bIsPrimaryCannon = true;
 
 public:
 	UFUNCTION(BlueprintCallable, Category = "Movement")
