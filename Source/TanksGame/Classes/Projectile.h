@@ -3,41 +3,13 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "ActorPool.h"
-#include "Components/SphereComponent.h"
-#include "GameFramework/Actor.h"
+#include "ProjectileBase.h"
 #include "Projectile.generated.h"
 
 UCLASS()
-class TANKSGAME_API AProjectile : public AActor
+class TANKSGAME_API AProjectile : public AProjectileBase
 {
 	GENERATED_BODY()
-	
-protected:
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
-	UAudioComponent* AudioEffect;
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
-	UStaticMeshComponent* Mesh;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Movement")
-	float MoveSpeed = 500.f;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Movement")
-	float FireRange = 3000.f;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Damage")
-	float Damage = 1.f;
 
-
-
-public:
 	AProjectile();
-
-	void Start();
-	void Stop();
-	virtual void Tick(float DeltaSeconds) override;
-
-protected:
-	UFUNCTION()
-	void OnHit(class UPrimitiveComponent* HitComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& SweepResult);
-
-private:
-	FVector StartPosition;
 };
