@@ -22,27 +22,35 @@ public:
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
 	UAudioComponent* AudioEffect;
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
+	
 	UStaticMeshComponent* Mesh;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Damage")
-	float Damage = 1.f;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Movement")
 	float MoveSpeed = 500.f;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Movement")
 	float FireRange = 3000.f;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Physics")
+	float Mass = 1.f;
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Damage")
-    float PushForce = 1000;
+	float Damage = 1.f;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Damage")
+	bool bEnableRadialDamage = false;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Damage")
+	float ExplosionRange = 500.f;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Damage")
+	float ExplosionImpulse = 1000.f;
 
 	virtual void Start();
+	virtual void Stop();
+	virtual void Move(float DeltaTime);
 
 protected:
 	virtual void BeginPlay() override;
 	
 	UFUNCTION()
-	virtual void Move(float DeltaTime);
-	UFUNCTION()
 	virtual void OnHit(class UPrimitiveComponent* HitComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& SweepResult);
 
-	void Stop();
+	void ApplyDamage(AActor* Actor, UPrimitiveComponent* Component, const FHitResult& Hit, const FVector& Impulse);
 
 private:
 	FVector StartPosition;

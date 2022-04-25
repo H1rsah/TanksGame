@@ -23,7 +23,7 @@ void AProjectileMortair::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor,
 	{
 		FVector ForceVector = OtherActor->GetActorLocation() - GetActorLocation();
 		ForceVector.Normalize();
-		PrimitiveMesh->AddImpulse(ForceVector * PushForce, NAME_None, true);
+		// PrimitiveMesh->AddImpulse(ForceVector * PushForce, NAME_None, true);
 	}
 }
 

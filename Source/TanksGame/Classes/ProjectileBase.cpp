@@ -14,16 +14,17 @@ AProjectileBase::AProjectileBase()
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
 	Mesh->SetupAttachment(RootComponent);
 	Mesh->OnComponentHit.AddDynamic(this, &AProjectileBase::OnHit);
-	Mesh->SetHiddenInGame(true);
+	Mesh->SetVisibility(true);
+	RootComponent = Mesh;
 
 	AudioEffect = CreateDefaultSubobject<UAudioComponent>(TEXT("Audio Effect"));
-	AudioEffect->SetupAttachment(RootComponent);
+	AudioEffect->SetupAttachment(Mesh);
+
 }
 
 void AProjectileBase::BeginPlay()
 {
 	Super::BeginPlay();
-	
 }
 
 void AProjectileBase::Tick(float DeltaTime)
@@ -35,17 +36,63 @@ void AProjectileBase::Tick(float DeltaTime)
 
 void AProjectileBase::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& SweepResult)
 {
-	if (OtherActor == GetInstigator())
+	if (bEnableRadialDamage)
 	{
-		Destroy();
-		return;
+		FVector StartPos = GetActorLocation();
+		FVector EndPos = StartPos + FVector(0.1f);
+
+		FCollisionShape Shape = FCollisionShape::MakeSphere(ExplosionRange);
+		FCollisionQueryParams Params = FCollisionQueryParams::DefaultQueryParam;
+		Params.AddIgnoredActor(this);
+		Params.bTraceComplex = true;
+		Params.TraceTag = "Explode Trace";
+		TArray<FHitResult> AttackHit;
+
+		FQuat Rotation = FQuat::Identity;
+
+		// GetWorld()->DebugDrawTraceTag = "Explode Trace";
+		bool bSweepResult = GetWorld()->SweepMultiByChannel(AttackHit, StartPos, EndPos, Rotation, ECC_Visibility, Shape, Params);
+
+		if (bSweepResult)
+		{
+			for (FHitResult SweepHitResult : AttackHit)
+			{
+				AActor* HitActor = SweepHitResult.GetActor();
+				if (!HitActor)
+					continue;
+
+				FVector ForceVector = HitActor->GetActorLocation() - GetActorLocation();
+				ApplyDamage(HitActor, Cast<UPrimitiveComponent>(HitActor->GetRootComponent()), SweepHitResult, ForceVector * ExplosionImpulse);
+			}
+		}
+	}
+	else
+	{
+		ApplyDamage(OtherActor, OtherComp, SweepResult, Mass * MoveSpeed * GetActorForwardVector());
 	}
 	
+	AudioEffect->Play();
+	Stop();
+}
+
+void AProjectileBase::ApplyDamage(AActor* OtherActor, UPrimitiveComponent* OtherComp, const FHitResult& Hit, const FVector& Impulse)
+{
+	if (OtherActor == GetInstigator())
+	{
+		// Destroy();
+		return;
+	}
+    
+	if (OtherComp && OtherComp->IsSimulatingPhysics())
+	{
+		OtherComp->AddImpulseAtLocation(Impulse, Hit.ImpactPoint);
+	}
+    	
 	if (OtherActor && OtherComp && OtherComp->GetCollisionObjectType() == ECC_Destructible)
 	{
 		OtherActor->Destroy();
 	}
-	
+    	
 	IDamageable* Damageable = Cast<IDamageable>(OtherActor);
 	if (Damageable && GetOwner() != OtherActor)
 	{
@@ -55,9 +102,6 @@ void AProjectileBase::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UP
 		DamageType.DamageMaker = this;
 		Damageable->TakeDamage(DamageType);
 	}
-
-	AudioEffect->Play();
-	Stop();
 }
 
 
@@ -65,7 +109,7 @@ void AProjectileBase::Start()
 {
 	PrimaryActorTick.SetTickFunctionEnable(true);
 	StartPosition = GetActorLocation();
-	Mesh->SetHiddenInGame(false);
+	Mesh->SetVisibility(true);
 	Mesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 }
 
@@ -83,7 +127,7 @@ void AProjectileBase::Move(float DeltaTime)
 void AProjectileBase::Stop()
 {
 	PrimaryActorTick.SetTickFunctionEnable(false);
-	Mesh->SetHiddenInGame(true);
+	Mesh->SetVisibility(false);
 	Mesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
 	UActorPool* Pool = GetWorld()->GetSubsystem<UActorPool>();

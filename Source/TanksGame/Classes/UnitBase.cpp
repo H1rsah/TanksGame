@@ -1,6 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "UnitBase.h"
+
+#include "DrawDebugHelpers.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
 
@@ -70,6 +72,12 @@ void AUnitBase::Destroyed()
 
 void AUnitBase::RotateTurretToTarget(const FVector TargetLocation, const bool bIsRollRequired) const
 {
+	if (CurrentCannon->IsBallistic())
+	{
+		CurrentCannon->SetDesiredBallisticTarget(TargetLocation);
+		DrawDebugSphere(GetWorld(), CurrentCannon->GetCurrentBallisticTarget(0.f), 100.f, 10, FColor::Red, false, 0.05f);
+	}
+	
 	FRotator TargetRotation = UKismetMathLibrary::FindLookAtRotation(CannonSetupPoint->GetComponentLocation(), TargetLocation);
 	if (bIsRollRequired)
 		TargetRotation.Roll = 90.f;

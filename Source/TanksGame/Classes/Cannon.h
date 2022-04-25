@@ -57,14 +57,6 @@ public:
 	UForceFeedbackEffect* ShootForceEffect;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Effects")
 	TSubclassOf<UCameraShakeBase> ShootShake;
-private:
-	FTimerHandle ReloadTimerHandle;
-	FTimerHandle BurstTimerHandle;
-	bool bIsReadyToFire = false;
-
-public:
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
 
 	void Fire();
 	void FireSpecial();
@@ -72,10 +64,14 @@ public:
 	bool HasSpecialFire() const;
 	void AddAmmo(int32 Value);
 	void SetVisibility(bool bIsVisible) const;
+
+	bool IsBallistic() const;
+	FVector GetCurrentBallisticTarget(float FloorAbsoluteHeight) const;
+	bool SetDesiredBallisticTarget(const FVector& InTarget);
 	
 protected:
-	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+	virtual void Tick(float DeltaTime) override;
 	virtual void EndPlay(EEndPlayReason::Type EndPlayReason) override;
 	
 	void Reload();
@@ -84,4 +80,9 @@ protected:
 	UPROPERTY(BlueprintReadOnly)
 	int32 CurrentAmmo = 0;
 	int32 BurstShotsLeft = 0;
+	
+private:
+	FTimerHandle ReloadTimerHandle;
+	FTimerHandle BurstTimerHandle;
+	bool bIsReadyToFire = false;
 };

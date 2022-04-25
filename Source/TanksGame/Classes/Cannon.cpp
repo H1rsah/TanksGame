@@ -3,6 +3,7 @@
 
 #include "Cannon.h"
 #include "DrawDebugHelpers.h"
+#include "ProjectilePhysics.h"
 #include "TanksGame/Interfaaces/Damageable.h"
 
 
@@ -10,7 +11,7 @@
 ACannon::ACannon()
 {
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 
 	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));;
 	
@@ -61,6 +62,7 @@ void ACannon::Fire()
 	bIsReadyToFire = false;
 	--CurrentAmmo;
 	BurstShotsLeft = 1;
+	
 	Shot();
 }
 
@@ -94,6 +96,83 @@ void ACannon::AddAmmo(const int32 Value)
 void ACannon::SetVisibility(bool bIsVisible) const
 {
 	Mesh->SetHiddenInGame(!bIsVisible);
+}
+
+bool ACannon::IsBallistic() const
+{
+	return CannonType == ECannonType::FireProjectile && ProjectileActor && ProjectileActor->IsChildOf<AProjectilePhysics>();
+}
+
+FVector ACannon::GetCurrentBallisticTarget(float FloorAbsoluteHeight) const
+{
+	if (!IsBallistic())
+	{
+		// Can't calculate
+		return GetActorLocation();
+	}
+
+	AProjectilePhysics* DefaultProjectile = ProjectileActor->GetDefaultObject<AProjectilePhysics>();
+	check(DefaultProjectile);
+
+	float Angle = FMath::DegreesToRadians(ProjectileSpawnPoint->GetForwardVector().Rotation().Pitch);
+	float Speed = DefaultProjectile->MoveSpeed;
+	float Gravity = DefaultProjectile->MovementComponent->GetGravity();
+	if (FMath::IsNearlyZero(Gravity))
+	{
+		// Can't calculate
+		return GetActorLocation();
+	}
+
+	float Z = ProjectileSpawnPoint->GetComponentLocation().Z - FloorAbsoluteHeight;
+
+	// From https://habr.com/ru/post/538952/ (y is calculated differently)
+	float SqrtComp = FMath::Sqrt(FMath::Square(Speed * FMath::Sin(Angle)) + 2 * Gravity * Z);
+	float Range = Speed * FMath::Cos(Angle) * (Speed * FMath::Sin(Angle) + SqrtComp) / Gravity;
+	FVector FlatDirection = ProjectileSpawnPoint->GetForwardVector();
+	FlatDirection.Z = 0.f;
+	FlatDirection.Normalize();
+	FVector Result = ProjectileSpawnPoint->GetComponentLocation() + FlatDirection * Range;
+	Result.Z = FloorAbsoluteHeight;
+	
+	return Result;
+}
+
+bool ACannon::SetDesiredBallisticTarget(const FVector& InTarget)
+{
+	if (!IsBallistic())
+	{
+		return false;
+	}
+
+	AProjectilePhysics* DefaultProjectile = ProjectileActor->GetDefaultObject<AProjectilePhysics>();
+	check(DefaultProjectile);
+
+	float Speed = DefaultProjectile->MoveSpeed;
+	float Gravity = DefaultProjectile->MovementComponent->GetGravity();
+	if (FMath::IsNearlyZero(Gravity))
+	{
+		return false;
+	}
+	float Z = ProjectileSpawnPoint->GetComponentLocation().Z - InTarget.Z;
+	float X = FVector::Dist2D(ProjectileSpawnPoint->GetComponentLocation(), InTarget);
+	float Angle = 90.f; // If X is 0 then just look at the sky :)
+	if (!FMath::IsNearlyZero(X))
+	{
+		float FirstSqrtComp = FMath::Pow(Speed, 4);
+		float SecondSqrtComp = Gravity * (Gravity * FMath::Square(X) - 2 * (FMath::Square(Speed) * Z));
+		float SqrtComp = 0.f;
+		if (FirstSqrtComp > SecondSqrtComp)
+		{
+			SqrtComp = FMath::Sqrt(FirstSqrtComp - SecondSqrtComp);
+		}
+		Angle = FMath::Atan((FMath::Square(Speed) + SqrtComp) / (Gravity * X));
+		Angle = FMath::RadiansToDegrees(Angle);
+	}
+
+	FRotator DesiredRotation = GetActorRotation();
+	DesiredRotation.Pitch = Angle;
+	SetActorRotation(DesiredRotation);
+	return true;
 }
 
 void ACannon::Reload()
