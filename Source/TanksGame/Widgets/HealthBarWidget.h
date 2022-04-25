@@ -20,7 +20,7 @@ class TANKSGAME_API UHealthBarWidget : public UUserWidget
 	TWeakObjectPtr<UHealthComponent> OwnerHealth;
 	
 protected:
-	UPROPERTY(meta = (BindWidget))
+	UPROPERTY(meta=(BindWidget))
 	UProgressBar* HealthBar;
 
 public:

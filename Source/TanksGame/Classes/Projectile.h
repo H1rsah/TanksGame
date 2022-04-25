@@ -12,4 +12,5 @@ class TANKSGAME_API AProjectile : public AProjectileBase
 	GENERATED_BODY()
 
 	AProjectile();
+	
 };

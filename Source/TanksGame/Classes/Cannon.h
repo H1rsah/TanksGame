@@ -51,7 +51,7 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Fire params")
 	ECannonType CannonType = ECannonType::FireProjectile;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, meta = (EditCondition = "CannonType == ECannonType::FireProjectile", EditConditionHides), Category = "Fire params")
-	TSubclassOf<AProjectile> ProjectileActor;
+	TSubclassOf<AProjectileBase> ProjectileActor;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Effects")
 	UForceFeedbackEffect* ShootForceEffect;

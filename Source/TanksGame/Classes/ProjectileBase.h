@@ -29,16 +29,19 @@ public:
 	float MoveSpeed = 500.f;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Movement")
 	float FireRange = 3000.f;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Damage")
+    float PushForce = 1000;
 
+	virtual void Start();
 
 protected:
 	virtual void BeginPlay() override;
 	
 	UFUNCTION()
-	void OnHit(class UPrimitiveComponent* HitComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& SweepResult);
+	virtual void Move(float DeltaTime);
+	UFUNCTION()
+	virtual void OnHit(class UPrimitiveComponent* HitComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& SweepResult);
 
-	void Start();
-	void Move(float DeltaTime);
 	void Stop();
 
 private:

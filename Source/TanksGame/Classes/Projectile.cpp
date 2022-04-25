@@ -1,5 +1,5 @@
 // Fill out your copyright notice in the Description page of Project Settings.
-#pragma optimize( "", off )
+
 
 #include "Projectile.h"
 
@@ -8,4 +8,3 @@
 AProjectile::AProjectile()
 {}
 
-#pragma optimize( "", on )

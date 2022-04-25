@@ -111,7 +111,7 @@ void ACannon::Shot()
 
 		UActorPool* Pool = GetWorld()->GetSubsystem<UActorPool>();
 		const FTransform SpawnTransform(ProjectileSpawnPoint->GetComponentRotation(), ProjectileSpawnPoint->GetComponentLocation(), FVector::OneVector);
-		AProjectile* MyProjectile = Cast<AProjectile>(Pool->RetreiveActor(ProjectileActor, SpawnTransform));
+		AProjectileBase* MyProjectile = Cast<AProjectileBase>(Pool->RetreiveActor(ProjectileActor, SpawnTransform));
 		if(MyProjectile)
 		{
 			MyProjectile->SetInstigator(GetInstigator());
